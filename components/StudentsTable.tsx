@@ -1,6 +1,6 @@
 'use client'
 
-
+import { useRouter } from 'next/navigation'
 import {
   Card,
   CardContent,
@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/table"
 import { useEffect, useState } from "react"
 import { createClient } from "@/utils/supabase/client";
+import { Button } from "./ui/button";
 
 
 interface Student {
@@ -31,6 +32,7 @@ const StudentsTable: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const supabase = createClient()
+ const router = useRouter()
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -58,15 +60,21 @@ const StudentsTable: React.FC = () => {
     fetchStudents()
   }, [supabase]) // Dependencies: only re-run if supabase client changes
 
+
+ const handleViewForms = (studentId: string) => {
+    router.push(`/student/${studentId}`)
+  }
+
   if (loading) {
     return <div>Loading...</div>
   }
+
 
   return (
     <Card>
       <CardHeader className="px-7">
         <CardTitle>Students</CardTitle>
-        <CardDescription>List of students enrolled in your classes.</CardDescription>
+        <CardDescription>List of students</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -74,17 +82,19 @@ const StudentsTable: React.FC = () => {
             <TableRow>
               <TableHead>Email</TableHead>
               <TableHead>Class</TableHead>
-              <TableHead className="hidden md:table-cell">Enrolled Date</TableHead>
+              <TableHead>Enrolled Date</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {students.map((student) => (
               <TableRow key={student.id}>
-                <TableCell>
-                  <div className="font-medium">{student.email}</div>
-                </TableCell>
+                <TableCell>{student.email}</TableCell>
                 <TableCell>{student.class}</TableCell>
-                <TableCell className="hidden md:table-cell">{new Date(student.created_at).toLocaleDateString()}</TableCell>
+                <TableCell>{new Date(student.created_at).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  <Button onClick={() => handleViewForms(student.id)}>View Forms</Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -93,6 +103,7 @@ const StudentsTable: React.FC = () => {
     </Card>
   )
 }
+
 
 
 

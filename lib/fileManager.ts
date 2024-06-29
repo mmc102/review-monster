@@ -70,6 +70,27 @@ async function downloadBlob(storagePath: string): Promise<object> {
   return data
 }
 
+export const pullFormBlobs = async (data: Omit<IForm, 'blobUrl'>[]): Promise<IForm[]> => {
+
+    const supabase = createClient();
+    const formsWithBlobs = await Promise.all(
+        data.map(async (form) => {
+        const { data: fileData, error: fileError } = await supabase.storage
+            .from('forms')
+            .download(form.storage_path)
+
+        if (fileError) {
+            throw fileError
+        }
+
+        const blobUrl = URL.createObjectURL(fileData)
+        return { ...form, blobUrl }
+        })
+    )
+  return formsWithBlobs
+}
+
+
 export async function getUserForms(): Promise<IForm[]> {
     
   const supabase = createClient();
@@ -92,22 +113,7 @@ export async function getUserForms(): Promise<IForm[]> {
     return []
   }
 
-  const formsWithBlobs = await Promise.all(
-    data.map(async (form) => {
-      const { data: fileData, error: fileError } = await supabase.storage
-        .from('forms')
-        .download(form.storage_path)
-
-      if (fileError) {
-        throw fileError
-      }
-
-      const blobUrl = URL.createObjectURL(fileData)
-      return { ...form, blobUrl }
-    })
-  )
-
-  return formsWithBlobs
+  return pullFormBlobs(data)
 }
 
 

@@ -1,38 +1,39 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
 import {
   Card,
-  CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+  CardDescription,
+  CardContent,
+} from '@/components/ui/card'
 import {
   Table,
-  TableBody,
-  TableCell,
-  TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { useEffect, useState } from "react"
-import { IForm, getUserForms } from "@/lib/fileManager";
-import PDFViewer from "./PDFViewer";
-import { Button } from "./ui/button";
+  TableHead,
+  TableBody,
+  TableCell,
+} from '@/components/ui/table'
+import {
+  Badge
+} from '@/components/ui/badge'
+import { AssignedForm, getStudentForms } from '@/lib/SignedForms'
 
 
 
-const FormsTable: React.FC = () => {
-  const [forms, setForms] = useState<IForm[]>([])
+const StudentFormsTable: React.FC<{studentId: string}> = ({studentId}) => {
+  const [forms, setForms] = useState<AssignedForm[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
 
   useEffect(() => {
     const fetchForms = async () => {
       try {
-        const forms = await getUserForms()
+        const forms = await getStudentForms(studentId)
+        console.log(forms)
         setForms(forms)
       } catch (error: any) {
         console.error('Error fetching forms:', error)
@@ -43,7 +44,7 @@ const FormsTable: React.FC = () => {
     }
 
     fetchForms()
-  }, [])
+  }, [studentId])
 
   if (loading) {
     return <div>Loading...</div>
@@ -52,16 +53,13 @@ const FormsTable: React.FC = () => {
   if (error) {
     return <div>Error: {error}</div>
   }
-    const handleViewForm = (formId: string) => {
-    router.push(`/form/${formId}`)
-  }
 
 
   return (
     <Card>
       <CardHeader className="px-7">
-        <CardTitle>Forms</CardTitle>
-        <CardDescription>Available forms</CardDescription>
+        <CardTitle>Student Forms</CardTitle>
+        <CardDescription>List of forms signed or pending by the student</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -69,8 +67,7 @@ const FormsTable: React.FC = () => {
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead className="hidden md:table-cell">Created Date</TableHead>
-              <TableHead>Form</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Completed?</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -81,10 +78,9 @@ const FormsTable: React.FC = () => {
                 </TableCell>
                 <TableCell className="hidden md:table-cell">{new Date(form.created_at).toLocaleDateString()}</TableCell>
                 <TableCell>
-                  <PDFViewer url={form.blobUrl} height={50} width={50} />
-                </TableCell>
-                <TableCell>
-                  <Button onClick={() => handleViewForm(form.id)}>View Form</Button>
+                  <Badge className={form.completed ? 'bg-green-500' : 'bg-yellow-500'}>
+                    {form.completed}
+                  </Badge>
                 </TableCell>
               </TableRow>
             ))}
@@ -95,14 +91,4 @@ const FormsTable: React.FC = () => {
   )
 }
 
-
-
-export default function FormsPage(){
-
-    return (
-        <div>
-            <FormsTable/>
-        </div>
-
-    )
-}
+export default StudentFormsTable

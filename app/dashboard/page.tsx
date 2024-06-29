@@ -4,6 +4,7 @@ import StudentsPage from "@/components/StudentsTable";
 import FormsTable  from "@/components/FormsTable";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import StudentFormsTable from "@/components/StudentTable";
 
 export default async function ProtectedPage() {
   const supabase = createClient();
