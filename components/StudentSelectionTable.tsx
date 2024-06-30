@@ -8,6 +8,7 @@ import { createClient } from '@/utils/supabase/client';
 interface Student {
   id: string;
   email: string;
+  name: string
   class: string;
   created_at: string;
 }
@@ -51,19 +52,25 @@ const StudentSelectionTable: React.FC<StudentSelectionTableProps> = ({ selectedS
 
   const handleCheckAll = () => {
     setAllStudents((prev) => !prev);
-    setSelectedStudents((prevSelected) =>
-      prevSelected.length === students.length ? [] : students.map((student) => student.id)
-    );
+    const func = (prevSelected: string | any[]) =>(
+      prevSelected.length === students.length ? [] : students.map((student) => student.id))
+
+    setSelectedStudents(func(selectedStudents))
   }
 
 
- const handleCheckboxChange = (studentId: string) => {
-    setSelectedStudents((prevSelected) =>
-      prevSelected.includes(studentId)
-        ? prevSelected.filter((id) => id !== studentId)
-        : [...prevSelected, studentId]
-    );
-  };
+const handleCheckboxChange = (studentId: string) => {
+  const func = (prevSelected: string[]) => {
+    if (prevSelected.includes(studentId)) {
+      return prevSelected.filter((id: string) => id !== studentId);
+    } else {
+      return [...prevSelected, studentId];
+    }
+  }
+  
+  setSelectedStudents(func(selectedStudents))
+};
+
 
   if (loading) {
     return <div>Loading...</div>;
