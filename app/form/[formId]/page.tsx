@@ -1,10 +1,8 @@
-import FormDetails from "@/components/FormDetails"
+import FormDetail from "@/components/FormDetails"
 
 const FormDetailsPage = ({ params }: { params: { formId: string } }) => {
   return ( 
-  <>
-  <FormDetails formId={params.formId} />
-</>
+  <FormDetail formId={params.formId} />
   )
 }
 

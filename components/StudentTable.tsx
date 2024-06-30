@@ -1,14 +1,13 @@
-'use client'
+'use client';
 
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-} from '@/components/ui/card'
+} from '@/components/ui/card';
 import {
   Table,
   TableHeader,
@@ -16,44 +15,46 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from '@/components/ui/table'
-import {
-  Badge
-} from '@/components/ui/badge'
-import { AssignedForm, getStudentForms } from '@/lib/SignedForms'
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { AssignedForm, getStudentForms, StudentInfo,getStudentInfo } from '@/lib/SignedForms';
+import { FormStatus } from '@/types';
 
 
 
-const StudentFormsTable: React.FC<{studentId: string}> = ({studentId}) => {
-  const [forms, setForms] = useState<AssignedForm[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
+const StudentFormsTable: React.FC<{ studentId: string }> = ({ studentId }) => {
+  const [forms, setForms] = useState<AssignedForm[]>([]);
+  const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchForms = async () => {
+    const fetchStudentData = async () => {
       try {
-        const forms = await getStudentForms(studentId)
-        console.log(forms)
-        setForms(forms)
+        const [forms, studentInfo] = await Promise.all([
+          getStudentForms(studentId),
+          getStudentInfo(studentId),
+        ]);
+        setForms(forms);
+        setStudentInfo(studentInfo);
       } catch (error: any) {
-        console.error('Error fetching forms:', error)
-        setError(error.message)
+        console.error('Error fetching data:', error);
+        setError(error.message);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchForms()
-  }, [studentId])
+    fetchStudentData();
+  }, [studentId]);
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>
+    return <div>Error: {error}</div>;
   }
-
 
   return (
     <Card>
@@ -62,12 +63,19 @@ const StudentFormsTable: React.FC<{studentId: string}> = ({studentId}) => {
         <CardDescription>List of forms signed or pending by the student</CardDescription>
       </CardHeader>
       <CardContent>
+        {studentInfo && (
+          <div className="mb-6">
+            <h2 className="text-lg font-bold">Student Information</h2>
+            <p><strong>Name:</strong> {studentInfo.name}</p>
+            <p><strong>Email:</strong> {studentInfo.email}</p>
+          </div>
+        )}
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead className="hidden md:table-cell">Created Date</TableHead>
-              <TableHead>Completed?</TableHead>
+              <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -78,8 +86,12 @@ const StudentFormsTable: React.FC<{studentId: string}> = ({studentId}) => {
                 </TableCell>
                 <TableCell className="hidden md:table-cell">{new Date(form.created_at).toLocaleDateString()}</TableCell>
                 <TableCell>
-                  <Badge className={form.completed ? 'bg-green-500' : 'bg-yellow-500'}>
-                    {form.completed}
+                  <Badge className={
+                    form.status === FormStatus.Assigned ? 'bg-yellow-500' :
+                    form.status === FormStatus.Signed ? 'bg-blue-500' :
+                    'bg-green-500'
+                  }>
+                    {form.status}
                   </Badge>
                 </TableCell>
               </TableRow>
@@ -88,7 +100,8 @@ const StudentFormsTable: React.FC<{studentId: string}> = ({studentId}) => {
         </Table>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default StudentFormsTable
+export default StudentFormsTable;
+

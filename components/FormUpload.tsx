@@ -48,8 +48,8 @@ const FormUpload: React.FC = () => {
   return (
     <Card className="max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>Upload Form</CardTitle>
-        <CardDescription>Upload a new form and assign it a name</CardDescription>
+        <CardTitle>Create Form</CardTitle>
+        <CardDescription>Create a new form and assign it a name</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <Label htmlFor="formName">Form Name</Label>

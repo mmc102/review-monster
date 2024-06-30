@@ -117,4 +117,43 @@ export async function getUserForms(): Promise<IForm[]> {
 }
 
 
+const pullFormBlob = async (form: Omit<IForm, 'blobUrl'>): Promise<IForm> => {
+  const supabase = createClient();
+  const { data: fileData, error: fileError } = await supabase.storage
+    .from('forms')
+    .download(form.storage_path);
 
+  if (fileError) {
+    throw fileError;
+  }
+
+  const blobUrl = URL.createObjectURL(fileData);
+  return { ...form, blobUrl };
+};
+
+
+
+export const getFormById = async (formId: string): Promise<IForm> => {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+
+  const { data, error } = await supabase
+    .from('forms')
+    .select('id, storage_path, name, created_at')
+    .eq('id', formId)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    throw new Error('Form not found');
+  }
+
+  return pullFormBlob(data);
+};

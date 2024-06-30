@@ -1,19 +1,23 @@
 
 import { createClient } from "@/utils/supabase/client";
 import { IForm, pullFormBlobs } from "./fileManager";
+import { FormStatus } from "@/types";
 
+
+export interface FormDetailsStudent {
+      id: string
+      email: string
+      class: string
+      assigned_at: string
+      status: FormStatus
+      signed_at: string
+}
 export interface FormDetails {
     id: string
     name: string
     created_at: string
     blobUrl: string
-    students: {
-      id: string
-      email: string
-      class: string
-      assigned_at: string
-      completed: boolean
-    }[]
+    students: FormDetailsStudent[];
   }
   
   export async function getFormDetails(formId: string): Promise<FormDetails> {
@@ -34,7 +38,8 @@ export interface FormDetails {
       .from('signed_forms')
       .select(`
         student_id,
-        completed,
+        signed_at,
+        status,
         created_at,
         students (
           id,
@@ -53,7 +58,8 @@ export interface FormDetails {
       email: row.students.email,
       class: row.students.class,
       assigned_at: row.created_at,
-      completed: row.completed
+      signed_at: row.signed_at,
+      status: row.status
     }))
   
     const val =  {
