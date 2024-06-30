@@ -20,14 +20,10 @@ import { useEffect, useState } from "react"
 import { createClient } from "@/utils/supabase/client";
 import { Button } from "./ui/button";
 import SkeletonLoader from './SketetonLoader'
+import { Student } from '@/types'
 
 
-interface Student {
-  id: string
-  email: string
-  class: string
-  created_at: string
-}
+
 
 const StudentsTable: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
@@ -47,13 +43,21 @@ const StudentsTable: React.FC = () => {
 
       const { data, error } = await supabase
         .from('students')
-        .select('*')
+        .select(`
+          id,
+          email,
+          created_at,
+          class_id (
+            name,
+            year
+          )
+        `)
         .eq('user_id', user.id);
 
       if (error) {
         console.error('Error fetching students:', error);
       } else {
-        setStudents(data);
+        setStudents(data as unknown as Student[]); //TODO improve
       }
       setLoading(false);
     };
@@ -125,7 +129,7 @@ const StudentsTable: React.FC = () => {
             {students.map((student) => (
               <TableRow key={student.id}>
                 <TableCell>{student.email}</TableCell>
-                <TableCell>{student.class}</TableCell>
+                <TableCell>{`${student.class_id.name} (${student.class_id.year})`}</TableCell>
                 <TableCell>{new Date(student.created_at).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <Button onClick={() => handleViewForms(student.id)}>Assigned Forms</Button>

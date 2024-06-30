@@ -27,7 +27,7 @@ export default async function Dashboard() {
                 <CardDescription>View and create students</CardDescription>
               </CardHeader>
               <CardFooter>
-                <Link href="/students">
+                <Link href="/protected/students">
                   <Button> Students<ArrowRightIcon/></Button>
                 </Link>
               </CardFooter>
@@ -38,7 +38,7 @@ export default async function Dashboard() {
                 <CardDescription>View and create forms</CardDescription>
               </CardHeader>
               <CardFooter>
-                <Link href="/forms">
+                <Link href="/protected/forms">
                   <Button>Forms<ArrowRightIcon/></Button>
                 </Link>
               </CardFooter>
@@ -49,7 +49,7 @@ export default async function Dashboard() {
                 <CardDescription>Assign forms to students</CardDescription>
               </CardHeader>
               <CardContent>
-                <Link href="/assign-forms">
+                <Link href="/protected/assign-forms">
                   <Button>Assign Forms<ArrowRightIcon/></Button>
                 </Link>
               </CardContent>

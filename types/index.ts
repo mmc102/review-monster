@@ -3,3 +3,23 @@ export enum FormStatus {
     Signed = 'signed',
     Accepted = 'accepted',
   }
+
+
+export interface Class {
+id: number;
+year: number;
+name: string;
+created_at: string;
+}
+
+
+export interface Student {
+    id: string;
+    email: string;
+    created_at: string;
+    class_id: {
+      name: string;
+      year: number;
+    };
+  }
+  

@@ -25,7 +25,7 @@ const BreadcrumbWrapper: React.FC<BreadcrumbWrapperProps> = ({ paths }) => {
           <React.Fragment key={index}>
             <BreadcrumbItem>
               {path.href ? (
-                <BreadcrumbLink href={path.href}>{path.label}</BreadcrumbLink>
+                <BreadcrumbLink href={`/protected${path.href}`}>{path.label}</BreadcrumbLink>
               ) : (
                 <BreadcrumbPage>{path.label}</BreadcrumbPage>
               )}

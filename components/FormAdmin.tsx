@@ -45,7 +45,11 @@ const FormAdminTable: React.FC = () => {
               id,
               class,
               email,
-              name
+              name,
+              class_id (
+                name,
+                year 
+              )
             ),
             form_id (
               id,
@@ -64,7 +68,7 @@ const FormAdminTable: React.FC = () => {
           status: item.status,
           signed_storage_path: item.signed_storage_path,
           student_email: item.student_id.email,
-          class: item.student_id.class,
+          class: item.student_id.class_id.name,
           student_id: item.student_id.id,
           student_name: item.student_id.name,
         }));
