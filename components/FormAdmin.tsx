@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { FormStatus } from '@/types';
 import Link from 'next/link';
 import SkeletonLoader from './SketetonLoader';
-import { Resend } from 'resend';
+import { sendEmail } from '@/lib/emailSender';
 
 
 
@@ -33,13 +33,6 @@ const FormAdminTable: React.FC = () => {
 
   const supabase = createClient();
 
-  const sendTestEmail = async () => {
- try {
-  supabase.functions.invoke('resend')}
-     catch {
-      console.log("error")
-     }
-  }
 
 
   useEffect(() => {
@@ -96,7 +89,7 @@ const FormAdminTable: React.FC = () => {
   }, []);
 
   const handleRemind = (assignedFormId: string) => {
-    alert("nothing happens yet")
+    sendEmail({to: "blah", subject: "blah", html: "blah"  })
   }
   const handleShowForm = (assignedFormId: string) => { }
 
@@ -165,8 +158,6 @@ const FormAdminTable: React.FC = () => {
     <Card>
       <CardHeader>
         <CardTitle>Assigned Forms and Pending Actions</CardTitle>
-
-        <Button onClick={sendTestEmail}>test email</Button>
         <CardDescription>Review and approve signed forms</CardDescription>
       </CardHeader>
       <CardContent>

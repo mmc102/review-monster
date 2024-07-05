@@ -5,19 +5,29 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const handler = async (_request: Request): Promise<Response> => {
+const handler = async (request: Request): Promise<Response> => {
+
+ if (request.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders,
+    });
+  }
+
+  const { from, to, subject, html } = await request.json();
+
+  // Make the request to the Resend API
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${RESEND_API_KEY}`,
-      ...corsHeaders,
     },
     body: JSON.stringify({
-      from: 'matt@daycaredocuments.com',
-      to: ['mcarroll1220@gmail.com'],
-      subject: 'new document to sign',
-      html: '<strong>You have a new document to sign</strong>',
+      from,
+      to,
+      subject,
+      html
     }),
   })
 
@@ -27,8 +37,10 @@ const handler = async (_request: Request): Promise<Response> => {
     status: 200,
     headers: {
       'Content-Type': 'application/json',
+      ...corsHeaders,
     },
   })
 }
 
 Deno.serve(handler)
+
