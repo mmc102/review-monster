@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { FormStatus } from '@/types';
 import Link from 'next/link';
 import SkeletonLoader from './SketetonLoader';
+import { Resend } from 'resend';
 
 
 
@@ -31,6 +32,15 @@ const FormAdminTable: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const supabase = createClient();
+
+  const sendTestEmail = async () => {
+ try {
+  supabase.functions.invoke('resend')}
+     catch {
+      console.log("error")
+     }
+  }
+
 
   useEffect(() => {
     const fetchForms = async () => {
@@ -117,6 +127,7 @@ const FormAdminTable: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle>Assigned Forms and Pending Actions</CardTitle>
+
           <CardDescription>Review and approve signed forms</CardDescription>
         </CardHeader>
         <CardContent>
@@ -154,6 +165,8 @@ const FormAdminTable: React.FC = () => {
     <Card>
       <CardHeader>
         <CardTitle>Assigned Forms and Pending Actions</CardTitle>
+
+        <Button onClick={sendTestEmail}>test email</Button>
         <CardDescription>Review and approve signed forms</CardDescription>
       </CardHeader>
       <CardContent>
