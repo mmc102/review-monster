@@ -11,11 +11,10 @@ const generateSignEmailBody = (link:string, studentName:string, daycareName:stri
 <body>
 <p>Dear Parent,</p>
 <p>We hope this email finds you well.</p>
-<p>Please sign the following form for your child, <strong>${studentName}</strong>:</p>
+<p>Please sign the following form for your child, ${studentName}</p>
 <p><a href="${link}" target="_blank">${link}</a></p>
 <p>Let us know if you have any questions</p>
 <p>Thank you!</p>
-<p>Best regards,</p>
 <p>${daycareName}</p>
 </body>
 </html>
@@ -27,7 +26,7 @@ export const queueEmail = async ({formLink, studentId}:EmailProps) => {
 
     const { data: studentData, error: studentError } = await supabase
         .from('students')
-        .select('name, email, daycare_id, daycare_id (name)')
+        .select('name, email, daycare_id, daycare_id (id, name)')
         .eq('id', studentId)
         .single();
 
@@ -58,7 +57,7 @@ export const queueEmail = async ({formLink, studentId}:EmailProps) => {
                 form_link: formLink,
                 subject: subject,
                 body: body,
-                daycare_id: studentData.daycare_id,
+                daycare_id: studentData.daycare_id.id,
             },
         ]);
 

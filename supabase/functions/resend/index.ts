@@ -1,4 +1,6 @@
 // @ts-nocheck
+import { createClient } from 'jsr:@supabase/supabase-js@2'
+
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 
@@ -17,6 +19,11 @@ const handler = async (request: Request): Promise<Response> => {
   }
 
   try {
+
+  const supabase = createClient(
+      Deno.env.get('SUPABASE_URL'),
+      Deno.env.get('SUPABASE_ANON_KEY'),
+    )
     const { id, recipient_email, subject, body } = await request.json();
 
     // Validate the required fields
