@@ -110,7 +110,7 @@ const SignFormPage = ({ params }: { params: { id: string } }) => {
           <>
             <p>Form Name: {form.name}</p>
             {signedFormUrl ? (
-              <a href={signedFormUrl.blobUrl} download={`${form.name}.pdf`}>
+              <a href={signedFormUrl} download={`${form.name}.pdf`}>
                 <Button>Download Signed Form</Button>
               </a>
             ) : (
