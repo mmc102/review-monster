@@ -8,6 +8,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue, SelectGr
 import { Label } from '@/components/ui/label';
 import StudentSelectionTable from '@/components/StudentSelectionTable';
 import { FormStatus } from "@/types";
+import { EmailProps, queueEmail } from "@/lib/emailSender";
 
 
 interface Form {
@@ -62,11 +63,18 @@ const FormAssignment: React.FC = () => {
 
       const { data, error } = await supabase.from('signed_forms').insert(assignments).select();
 
+
       if (error) throw error;
 
-      data.forEach((assignment: { id: string }) => {
-        const url = `${window.location.origin}/sign-form/${assignment.id}`;
-        console.log(`Form URL for student: ${url}`);
+      data.forEach((assignment: { id: string, student_id: string }) => {
+        const formLink = `${window.location.origin}/sign-form/${assignment.id}`;
+
+        const emailProps: EmailProps = {
+          formLink,
+          studentId: assignment.student_id,  
+        }
+      queueEmail(emailProps);
+
       });
 
       alert('Forms assigned successfully');

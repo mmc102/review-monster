@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import { FormStatus } from '@/types';
 import Link from 'next/link';
 import SkeletonLoader from './SketetonLoader';
-import { sendEmail } from '@/lib/emailSender';
 
 
 
@@ -46,7 +45,6 @@ const FormAdminTable: React.FC = () => {
             signed_storage_path,
             student_id (
               id,
-              class,
               email,
               name,
               class_id (
@@ -89,7 +87,7 @@ const FormAdminTable: React.FC = () => {
   }, []);
 
   const handleRemind = (assignedFormId: string) => {
-    sendEmail({to: "blah", subject: "blah", html: "blah"  })
+    return
   }
   const handleShowForm = (assignedFormId: string) => { }
 

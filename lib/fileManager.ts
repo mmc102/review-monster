@@ -39,12 +39,22 @@ export async function createForm(file: File, name: String): Promise<any> {
         data: { user },
     } = await supabase.auth.getUser();
 
+    if (!user) {
+        throw new Error('User not authenticated');  
+    }
+    const { data: daycareData, error: daycareError } = await supabase
+      .from('user_daycares')
+      .select('daycare_id')
+      .eq('user_id', user.id).single();
 
+     if (!daycareData || daycareError) {
+        throw new Error('issue getting the daycare id');  
+    }
 
   const storagePath: string = await uploadFile(file)
   const { data, error } = await supabase
     .from('forms')
-    .insert([{ storage_path: storagePath, user_id: user?.id , name}])
+    .insert([{ storage_path: storagePath, user_id: user?.id , name, daycare_id: daycareData.daycare_id}])
 
   if (error) {
     throw error

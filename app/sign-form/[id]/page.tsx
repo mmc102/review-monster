@@ -12,6 +12,7 @@ import { FormStatus } from '@/types';
 
 const SignFormPage = ({ params }: { params: { id: string } }) => {
   const [form, setForm] = useState<IForm | null>(null);
+  const [signedForm, setSignedForm] = useState<IForm | null>(null);
   const [studentId, setStudentId] = useState<string>('');
   const [_formId, setFormId] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
@@ -87,7 +88,7 @@ const SignFormPage = ({ params }: { params: { id: string } }) => {
         throw updateError;
       }
 
-      router.push(`/sign-page/${params.id}/thanks`);
+      router.push(`/sign-form/${params.id}/thanks`);
     } catch (error: any) {
       console.error('Error uploading form:', error);
       setError('Error uploading form');
@@ -109,7 +110,7 @@ const SignFormPage = ({ params }: { params: { id: string } }) => {
           <>
             <p>Form Name: {form.name}</p>
             {signedFormUrl ? (
-              <a href={signedFormUrl} download={`${form.name}.pdf`}>
+              <a href={signedFormUrl.blobUrl} download={`${form.name}.pdf`}>
                 <Button>Download Signed Form</Button>
               </a>
             ) : (

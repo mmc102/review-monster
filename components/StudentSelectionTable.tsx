@@ -9,15 +9,15 @@ interface Student {
   id: string;
   email: string;
   name: string
-  class: string;
-  created_at: string;
+  class_id: { name: string };
 }
 
 interface StudentSelectionTableProps {
   selectedStudents: string[];
   setSelectedStudents: (selected: string[]) => void;
+  selectedForm: string | null
 }
-
+// TODO use selected form to filter available students
 const StudentSelectionTable: React.FC<StudentSelectionTableProps> = ({ selectedStudents, setSelectedStudents }) => {
   const [students, setStudents] = useState<Student[]>([]);
   const [allStudents, setAllStudents] = useState<boolean>(false);
@@ -36,13 +36,13 @@ const StudentSelectionTable: React.FC<StudentSelectionTableProps> = ({ selectedS
 
       const { data, error } = await supabase
         .from('students')
-        .select('*')
+        .select('id, name, email, class_id (name)')
         .eq('user_id', user.id);
 
       if (error) {
         console.error('Error fetching students:', error);
       } else {
-        setStudents(data);
+        setStudents(data as object as Student[]);
       }
       setLoading(false);
     };
@@ -103,7 +103,7 @@ const handleCheckboxChange = (studentId: string) => {
 
             <TableCell>{student.name}</TableCell>
             <TableCell>{student.email}</TableCell>
-            <TableCell>{student.class}</TableCell>
+            <TableCell>{student.class_id.name}</TableCell>
           </TableRow>
         ))}
       </TableBody>
