@@ -116,7 +116,7 @@ const FormAssignment: React.FC = () => {
         </Select>
 
         <Label>Select Students</Label>
-        <StudentSelectionTable selectedStudents={selectedStudents} setSelectedStudents={setSelectedStudents} />
+        <StudentSelectionTable selectedStudents={selectedStudents} setSelectedStudents={setSelectedStudents} selectedForm={selectedForm}/>
       </CardContent>
       <CardFooter>
         <Button onClick={handleSubmit}>Assign Form</Button>
