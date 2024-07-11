@@ -8,7 +8,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue, SelectGr
 import { Label } from '@/components/ui/label';
 import StudentSelectionTable from '@/components/StudentSelectionTable';
 import { FormStatus } from "@/types";
-import { EmailProps, queueEmail } from "@/lib/emailSender";
+import { EmailProps, EmailType, queueEmail } from "@/lib/emailSender";
 
 
 interface Form {
@@ -66,14 +66,15 @@ const FormAssignment: React.FC = () => {
 
       if (error) throw error;
 
-      data.forEach((assignment: { id: string, student_id: string }) => {
-        const formLink = `${window.location.origin}/sign-form/${assignment.id}`;
+      
 
+
+      data.forEach((assignment: { id: string, student_id: string }) => {
         const emailProps: EmailProps = {
-          formLink,
-          studentId: assignment.student_id,  
+          assignedFormId: assignment.id,
+          emailType: EmailType.SIGN
         }
-      queueEmail(emailProps);
+        queueEmail(emailProps);
 
       });
 

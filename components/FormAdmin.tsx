@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { FormStatus } from '@/types';
 import Link from 'next/link';
 import SkeletonLoader from './SketetonLoader';
+import { EmailType, queueEmail } from '@/lib/emailSender';
 
 
 
@@ -86,7 +87,22 @@ const FormAdminTable: React.FC = () => {
     fetchForms();
   }, []);
 
-  const handleRemind = (assignedFormId: string) => {
+  const handleRemind = async (assignedFormId: string) => {
+
+      const { data, error } = await supabase
+        .from('signed_forms')
+        .select('student_id')
+        .eq('id', assignedFormId);
+
+      if (error) {
+        throw error;
+      }
+
+    queueEmail({
+      assignedFormId,
+      emailType: EmailType.REMINDER
+
+    })
     return
   }
   const handleShowForm = (assignedFormId: string) => { }

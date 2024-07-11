@@ -69,3 +69,8 @@ export interface FormDetails {
 
     return val
   }
+
+
+  export const generateFormLink = (assignmentId: string)=> (
+    `${window.location.origin}/sign-form/${assignmentId}`
+  )
