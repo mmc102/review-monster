@@ -7,7 +7,7 @@ import { createClient } from '@/utils/supabase/client';
 const supabase = createClient();
 
 const withAuth = (WrappedComponent: React.ComponentType) => {
-  return (props: any) => {
+  return function useAuth(props: any) {
     const [loading, setLoading] = useState(true);
     const [authenticated, setAuthenticated] = useState(false);
     const router = useRouter();
@@ -15,7 +15,7 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
     useEffect(() => {
       const checkAuth = async () => {
         const { data: { user }, error } = await supabase.auth.getUser();
-        
+
         if (user) {
           setAuthenticated(true);
         } else {
@@ -39,5 +39,6 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
     return <WrappedComponent {...props} />;
   };
 };
+
 
 export default withAuth;

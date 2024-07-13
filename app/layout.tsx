@@ -20,17 +20,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
-    <main className="min-h-screen flex flex-col items-center">
-        <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-            <div className="w-3/4 flex justify-between items-center p-3 text-sm">
+    <main className="flex min-h-screen flex-col items-center">
+        <nav className="flex h-16 w-full justify-center border-b border-b-foreground/10">
+            <div className="flex w-3/4 items-center justify-between p-3 text-sm">
               <h1>Daycare Forms</h1>
                 <AuthButton />
             </div>
         </nav>
-        <div className="w-full px-10 mb-10 flex-grow">
+        <div className="mb-10 w-full grow px-10">
             {children}
         </div>
-        <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
+        <footer className="flex w-full justify-center border-t border-t-foreground/10 p-8 text-center text-xs">
             <p>Daycare Forms</p>
         </footer>
     </main>

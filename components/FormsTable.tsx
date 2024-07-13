@@ -51,7 +51,7 @@ const FormsTable: React.FC = () => {
   }
 
   const handleViewForm = (formId: string) => {
-    router.push(`/form/${formId}`);
+    router.push(`/protected/form/${formId}`);
   };
 
   return (
@@ -114,4 +114,4 @@ const FormsTable: React.FC = () => {
 
 
 
-export default  FormsTable
+export default FormsTable

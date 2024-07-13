@@ -1,10 +1,9 @@
 'use client'
 
-import BreadcrumbWrapper from "@/components/BreadcrumbWrapper"
 import React, { useEffect, useState } from 'react'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent} from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table'
-import {Badge}  from '@/components/ui/badge'
+import { Badge } from '@/components/ui/badge'
 import { FormDetails, FormDetailsStudent, getFormDetails } from '@/lib/FormDetails'
 import PDFViewer from './PDFViewer'
 import { FormStatus } from "@/types"
@@ -33,61 +32,59 @@ const FormDetail: React.FC<FormDetailsProps> = ({ formId }) => {
     fetchFormDetails()
   }, [formId])
 
-  if (loading || !form) {
+  if (loading) {
     return <div>Loading...</div>
   }
-
+  if (!form) {
+    return <div>No form found</div>
+  }
   if (error) {
     return <div>Error: {error}</div>
   }
 
-const path = [{ label: 'Dashboard', href: '/dashboard' },{ label: 'Forms', href: '/forms' }, { label: form.name  }]
 
   return (
-    <>
-    <BreadcrumbWrapper paths={path} />
-    <div className="mt-10">
-    <PDFViewer url={form.blobUrl} height={500} width={500} />
-    <Card>
-      <CardHeader className="px-7">
-        <CardTitle>{form.name}</CardTitle>
-        <CardDescription>Created on: {new Date(form.created_at).toLocaleDateString()}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Email</TableHead>
-              <TableHead>Class</TableHead>
-              <TableHead className="hidden md:table-cell">Assigned Date</TableHead>
-              <TableHead className="hidden md:table-cell">Signed Date</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {form.students.map((student: FormDetailsStudent) => (
-              <TableRow key={student.id}>
-                <TableCell>{student.email}</TableCell>
-                <TableCell>{student.class}</TableCell>
-                <TableCell className="hidden md:table-cell">{new Date(student.assigned_at).toLocaleDateString()}</TableCell>
-                <TableCell className="hidden md:table-cell">{new Date(student.signed_at).toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <Badge className={
-                    student.status === FormStatus.Assigned ? 'bg-yellow-500' :
-                    student.status === FormStatus.Signed ? 'bg-blue-500' :
-                    'bg-green-500'
-                  }>
-                    {student.status}
-                  </Badge>
-                </TableCell>
+    <div className='flex flex-col'>
+      <PDFViewer url={form.blobUrl} height={600} width={600} />
+      <Card>
+        <CardHeader className="px-7">
+          <CardTitle>{form.name}</CardTitle>
+          <CardDescription>Created on: {new Date(form.created_at).toLocaleDateString()}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Email</TableHead>
+                <TableHead>Class</TableHead>
+                <TableHead className="hidden md:table-cell">Assigned Date</TableHead>
+                <TableHead className="hidden md:table-cell">Signed Date</TableHead>
+                <TableHead>Status</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
-</div>
-</>
+            </TableHeader>
+            <TableBody>
+              {form.students.map((student: FormDetailsStudent) => (
+                <TableRow key={student.id}>
+                  <TableCell>{student.email}</TableCell>
+                  <TableCell>{student.class}</TableCell>
+                  <TableCell className="hidden md:table-cell">{new Date(student.assigned_at).toLocaleDateString()}</TableCell>
+                  <TableCell className="hidden md:table-cell">{student.signed_at ? new Date(student.signed_at).toLocaleDateString() : '---'}</TableCell>
+                  <TableCell>
+                    <Badge className={
+                      student.status === FormStatus.Assigned ? 'bg-yellow-500' :
+                        student.status === FormStatus.Signed ? 'bg-blue-500' :
+                          'bg-green-500'
+                    }>
+                      {student.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 

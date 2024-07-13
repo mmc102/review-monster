@@ -46,7 +46,7 @@ const SignFormPage: React.FC<SignFormPageProps> = ({ id }) => {
     };
 
     fetchForm();
-  }, [id]);
+  }, [id, supabase]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -72,7 +72,7 @@ const SignFormPage: React.FC<SignFormPageProps> = ({ id }) => {
         throw error;
       }
 
-      const { data: {publicUrl} } = supabase.storage.from('signed_forms').getPublicUrl(data.path);
+      const { data: { publicUrl } } = supabase.storage.from('signed_forms').getPublicUrl(data.path);
 
       const { error: updateError } = await supabase
         .from('signed_forms')

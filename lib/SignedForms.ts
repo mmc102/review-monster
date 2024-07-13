@@ -10,7 +10,7 @@ export interface AssignedForm {
 }
 
 export async function getStudentForms(studentId: string): Promise<AssignedForm[]> {
-const supabase = createClient()
+  const supabase = createClient()
   const { data, error } = await supabase
     .from('signed_forms')
     .select(`
@@ -38,6 +38,10 @@ const supabase = createClient()
 export interface StudentInfo {
   name: string;
   email: string;
+  class_id: {
+    name: string
+    year: string
+  }
 }
 
 
@@ -46,7 +50,7 @@ export const getStudentInfo = async (studentId: string): Promise<StudentInfo> =>
 
   const { data, error } = await supabase
     .from('students')
-    .select('name, email')
+    .select('name, email, class_id (name, year)')
     .eq('id', studentId)
     .single();
 
@@ -54,5 +58,5 @@ export const getStudentInfo = async (studentId: string): Promise<StudentInfo> =>
     throw error;
   }
 
-  return data;
+  return data as object as StudentInfo;
 };

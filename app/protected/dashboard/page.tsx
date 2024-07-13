@@ -18,9 +18,9 @@ export default async function Dashboard() {
   }
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-20 items-center mt-10">
-      <div className="flex-1 flex flex-col gap-20 px-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="mt-10 flex w-full flex-1 flex-col items-center gap-20">
+      <div className="flex flex-1 flex-col gap-20 px-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <Card>
               <CardHeader>
                 <CardTitle>Manage Students</CardTitle>

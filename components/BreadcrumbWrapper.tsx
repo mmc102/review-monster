@@ -19,7 +19,7 @@ interface BreadcrumbWrapperProps {
 
 const BreadcrumbWrapper: React.FC<BreadcrumbWrapperProps> = ({ paths }) => {
   return (
-    <Breadcrumb>
+    <Breadcrumb className='mb-10'>
       <BreadcrumbList>
         {paths.map((path, index) => (
           <React.Fragment key={index}>

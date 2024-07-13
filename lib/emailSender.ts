@@ -15,7 +15,7 @@ export enum EmailType {
     REMINDER = "REMINDER"
 }
 
-type emailGenerator = (link:string, studentName:string, daycareName:string) => string;
+type emailGenerator = (link: string, studentName: string, daycareName: string) => { subject: string, body: string };
 
 const emailBodyGenerators: { [key in EmailType]: emailGenerator } = {
     [EmailType.SIGN]: generateSignEmailBody,
@@ -23,25 +23,24 @@ const emailBodyGenerators: { [key in EmailType]: emailGenerator } = {
 };
 
 
-export const queueEmail = async ({assignedFormId,emailType}:EmailProps) => {
+export const queueEmail = async ({ assignedFormId, emailType }: EmailProps) => {
 
 
     const supabase = createClient();
 
-
     const formLink = generateFormLink(assignedFormId);
 
     const { data: rawStudentData, error: studentError } = await supabase
-    .from('signed_forms')
-    .select(`
-        student_id !single(
+        .from('signed_forms')
+        .select(`
+        student_id (
         name,
         email,
         daycare_id,
         daycare_id (id, name))
     `)
-    .eq('id', assignedFormId)
-    .single();
+        .eq('id', assignedFormId)
+        .single();
 
     type StudentDataType = {
         student_id: {
@@ -54,16 +53,15 @@ export const queueEmail = async ({assignedFormId,emailType}:EmailProps) => {
         }
     }
 
-    const  studentData= rawStudentData as object as  StudentDataType
+    const studentData = rawStudentData as object as StudentDataType
+
 
     if (studentError || !studentData) {
         console.error('Error fetching student data:', studentError);
         return;
     }
 
-    const subject = 'Please Sign the Form for Your Child';
-    const body = emailBodyGenerators[emailType](formLink, studentData.student_id.name ,studentData.student_id.daycare_id.name);
-
+    const { subject, body } = emailBodyGenerators[emailType](formLink, studentData.student_id.name, studentData.student_id.daycare_id.name);
 
 
     if (process.env.NODE_ENV === 'development') {
@@ -89,6 +87,6 @@ export const queueEmail = async ({assignedFormId,emailType}:EmailProps) => {
 
     if (error) {
         console.error('Error queueing email:', error);
-    } 
+    }
 };
 

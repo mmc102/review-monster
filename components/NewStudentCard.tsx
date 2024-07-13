@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
-import { Class } from '@/types';
+import { Class, Student } from '@/types';
+import { getUser } from "@/lib/utils";
 
-const NewStudentCard: React.FC = () => {
+const NewStudentCard = ({ setStudents }: { setStudents: (students: Student[]) => void }) => {
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [studentClass, setStudentClass] = useState<string | undefined>(undefined);
@@ -36,22 +37,21 @@ const NewStudentCard: React.FC = () => {
     };
 
     fetchClasses();
-  }, []);
+  }, [supabase]);
 
   const handleAddNewClass = async () => {
     if (!newClassName || !newClassYear) {
       alert('Please fill in all class fields');
       return;
     }
-
-
-   const { data: { user } } = await supabase.auth.getUser();
+    const user = await getUser()
 
     try {
       const { data, error } = await supabase.from('class').insert({
         name: newClassName,
         year: newClassYear,
-        user_id: user!.id,
+        user_id: user.id,
+        daycare_id: user.daycare_id,
         created_at: new Date().toISOString(),
       }).select().single();
 
@@ -77,28 +77,38 @@ const NewStudentCard: React.FC = () => {
 
     setLoading(true);
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = await getUser()
 
-    if (!user) {
-      alert('User not authenticated');
-      setLoading(false);
-      return;
-    }
 
     try {
-      const { error } = await supabase.from('students').insert({
+      const { data, error } = await supabase.from('students').insert({
         email,
         name,
         class_id: parseInt(studentClass),
         created_at: new Date().toISOString(),
-        user_id: user.id
-      });
+        user_id: user.id,
+        daycare_id: user.daycare_id
+      }).select(`
+          id,
+          email,
+          name,
+          created_at,
+          class_id (
+            name,
+            year
+          )
+        `);
+
 
       if (error) throw error;
 
+      const newStudent = data[0]
+      // eslint-disable-next-line
+      setStudents(prevStudents => [...prevStudents, newStudent]);
       setEmail('');
       setName('');
       setStudentClass(undefined);
+      console.log(data)
       alert('Student added successfully');
     } catch (error: any) {
       console.error('Error adding student:', error);
@@ -109,19 +119,19 @@ const NewStudentCard: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-4">
+    <div className="flex max-h-[410px] flex-col gap-4 md:flex-row">
       <Card>
         <CardHeader>
           <CardTitle>New Student</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <Label htmlFor="email">Email</Label>
+          < Label htmlFor="email" > Email</Label >
           <Input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter student email"
+            placeholder="Enter email"
             required
           />
 
@@ -148,21 +158,21 @@ const NewStudentCard: React.FC = () => {
                     {cls.name} ({cls.year})
                   </SelectItem>
                 ))}
-                
+
               </SelectGroup>
-                <Button variant='link' onClick={() => setShowNew(true)}>
-                  + New Class
-                </Button>
+              <Button variant='link' onClick={() => setShowNew(true)}>
+                + New Class
+              </Button>
             </SelectContent>
           </Select>
-        </CardContent>
+        </CardContent >
         <CardFooter>
           <Button onClick={handleSubmit} disabled={loading}>
             {loading ? 'Adding...' : 'Add Student'}
           </Button>
           {error && <p className="text-red-500">{error}</p>}
         </CardFooter>
-      </Card>
+      </Card >
 
       {showNew && (
         <Card>
@@ -190,7 +200,7 @@ const NewStudentCard: React.FC = () => {
           </CardContent>
         </Card>
       )}
-    </div>
+    </div >
   );
 };
 

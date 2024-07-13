@@ -23,10 +23,12 @@ import SkeletonLoader from './SketetonLoader'
 import { Student } from '@/types'
 
 
+interface StudentsTableProps {
+  students: Student[],
+  setStudents: (students: Student[]) => void
+}
 
-
-const StudentsTable: React.FC = () => {
-  const [students, setStudents] = useState<Student[]>([]);
+const StudentsTable = ({ setStudents, students }: StudentsTableProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const supabase = createClient();
   const router = useRouter();
@@ -46,6 +48,7 @@ const StudentsTable: React.FC = () => {
         .select(`
           id,
           email,
+          name,
           created_at,
           class_id (
             name,
@@ -57,16 +60,16 @@ const StudentsTable: React.FC = () => {
       if (error) {
         console.error('Error fetching students:', error);
       } else {
-        setStudents(data as unknown as Student[]); //TODO improve
+        setStudents(data as unknown as Student[]);
       }
       setLoading(false);
     };
 
     fetchStudents();
-  }, [supabase]); // Dependencies: only re-run if supabase client changes
+  }, [supabase, setStudents]);
 
   const handleViewForms = (studentId: string) => {
-    router.push(`/student/${studentId}`);
+    router.push(`/protected/student/${studentId}`);
   };
 
   if (loading) {
@@ -80,6 +83,7 @@ const StudentsTable: React.FC = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Class</TableHead>
                 <TableHead>Enrolled Date</TableHead>
@@ -119,6 +123,7 @@ const StudentsTable: React.FC = () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Class</TableHead>
               <TableHead>Enrolled Date</TableHead>
@@ -128,6 +133,7 @@ const StudentsTable: React.FC = () => {
           <TableBody>
             {students.map((student) => (
               <TableRow key={student.id}>
+                <TableCell>{student.name}</TableCell>
                 <TableCell>{student.email}</TableCell>
                 <TableCell>{`${student.class_id.name} (${student.class_id.year})`}</TableCell>
                 <TableCell>{new Date(student.created_at).toLocaleDateString()}</TableCell>

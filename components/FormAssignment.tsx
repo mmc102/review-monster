@@ -46,7 +46,7 @@ const FormAssignment: React.FC = () => {
       return;
     }
 
-    const { data: {user}} = await supabase.auth.getUser();
+    const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       alert('User not authenticated');
       return;
@@ -66,7 +66,7 @@ const FormAssignment: React.FC = () => {
 
       if (error) throw error;
 
-      
+
 
 
       data.forEach((assignment: { id: string, student_id: string }) => {
@@ -99,25 +99,27 @@ const FormAssignment: React.FC = () => {
         <CardDescription>Select a form and students to create assignments.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <Label htmlFor="formSelect">Select Form</Label>
-        <Select onValueChange={setSelectedForm}>
-          <SelectTrigger id="formSelect">
-            <SelectValue   placeholder="Select a form" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Forms</SelectLabel>
-              {forms.map((form) => (
-                <SelectItem key={form.id} value={form.id}>
-                  {form.name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <div className="max-w-96">
+          <Label htmlFor="formSelect">Select Form</Label>
+          <Select onValueChange={setSelectedForm}>
+            <SelectTrigger id="formSelect">
+              <SelectValue placeholder="Select a form" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Forms</SelectLabel>
+                {forms.map((form) => (
+                  <SelectItem key={form.id} value={form.id}>
+                    {form.name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
 
         <Label>Select Students</Label>
-        <StudentSelectionTable selectedStudents={selectedStudents} setSelectedStudents={setSelectedStudents} selectedForm={selectedForm}/>
+        <StudentSelectionTable selectedStudents={selectedStudents} setSelectedStudents={setSelectedStudents} selectedForm={selectedForm} />
       </CardContent>
       <CardFooter>
         <Button onClick={handleSubmit}>Assign Form</Button>

@@ -46,7 +46,7 @@ const FormUpload: React.FC = () => {
   }
 
   return (
-    <Card className="max-w-md mx-auto">
+    <Card className="mx-auto max-w-md">
       <CardHeader>
         <CardTitle>Create Form</CardTitle>
         <CardDescription>Create a new form and assign it a name</CardDescription>

@@ -9,8 +9,8 @@ interface PDFViewerProps {
 
 const PDFViewer: React.FC<PDFViewerProps> = ({ url, width, height }) => {
   return (
-    <div>
-        <embed src={url} type="application/pdf"   height={`${height}px`} width={`${width}px`}></embed>
+    <div className='m-4'>
+      <embed src={url} type="application/pdf" height={`${height}px`} width={`${width}px`}></embed>
     </div>
   )
 }

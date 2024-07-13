@@ -15,15 +15,15 @@ import { EmailType, queueEmail } from '@/lib/emailSender';
 
 
 interface AssignedForm {
-    id: string;
-    formId: string;
-    name: string;
-    class: string;
-    status: FormStatus;
-    signed_storage_path?: string;
-    student_email: string;
-    student_name: string;
-    student_id: string;
+  id: string;
+  formId: string;
+  name: string;
+  class: string;
+  status: FormStatus;
+  signed_storage_path?: string;
+  student_email: string;
+  student_name: string;
+  student_id: string;
 }
 
 const FormAdminTable: React.FC = () => {
@@ -85,25 +85,15 @@ const FormAdminTable: React.FC = () => {
     };
 
     fetchForms();
-  }, []);
+  }, [supabase]);
 
   const handleRemind = async (assignedFormId: string) => {
-
-      const { data, error } = await supabase
-        .from('signed_forms')
-        .select('student_id')
-        .eq('id', assignedFormId);
-
-      if (error) {
-        throw error;
-      }
-
     queueEmail({
       assignedFormId,
       emailType: EmailType.REMINDER
 
     })
-    return
+
   }
   const handleShowForm = (assignedFormId: string) => { }
 
@@ -197,12 +187,12 @@ const FormAdminTable: React.FC = () => {
                 <TableCell>
                   <Badge className={
                     assignedForm.status === FormStatus.Assigned ? 'bg-yellow-500' :
-                    assignedForm.status === FormStatus.Signed ? 'bg-blue-500' :
-                    'bg-green-500'
+                      assignedForm.status === FormStatus.Signed ? 'bg-blue-500' :
+                        'bg-green-500'
                   }>
                     {assignedForm.status}
                   </Badge>
-                  </TableCell>
+                </TableCell>
                 <TableCell>
                   <Button variant={'link'}>
                     <Link href={`/student/${assignedForm.student_id}`}>{assignedForm.student_name}</Link>

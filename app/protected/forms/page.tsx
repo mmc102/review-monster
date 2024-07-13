@@ -7,13 +7,13 @@ const FormsPage: React.FC = () => {
 
   return (
     <>
-    <BreadcrumbWrapper paths={[{ label: 'Dashboard', href: '/dashboard' },{ label: 'Forms', href: '/forms' }]} />
+      <BreadcrumbWrapper paths={[{ label: 'Dashboard', href: '/dashboard' }, { label: 'Forms', href: '/forms' }]} />
 
-    <div className="flex flex-row gap-10 mt-10">
-    <FormsTable />
-    <FormUpload />
-</div>
-  </>
+      <div className="flex flex-row gap-10">
+        <FormsTable />
+        <FormUpload />
+      </div>
+    </>
   )
 }
 

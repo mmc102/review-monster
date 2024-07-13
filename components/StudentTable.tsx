@@ -17,7 +17,7 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { AssignedForm, getStudentForms, StudentInfo,getStudentInfo } from '@/lib/SignedForms';
+import { AssignedForm, getStudentForms, StudentInfo, getStudentInfo } from '@/lib/SignedForms';
 import { FormStatus } from '@/types';
 
 
@@ -66,38 +66,44 @@ const StudentFormsTable: React.FC<{ studentId: string }> = ({ studentId }) => {
         {studentInfo && (
           <div className="mb-6">
             <h2 className="text-lg font-bold">Student Information</h2>
-            <p><strong>Name:</strong> {studentInfo.name}</p>
-            <p><strong>Email:</strong> {studentInfo.email}</p>
+            <p>{studentInfo.name}</p>
+            <p>{studentInfo.email}</p>
+            <p>{studentInfo.class_id.name} ({studentInfo.class_id.year})</p>
           </div>
         )}
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead className="hidden md:table-cell">Created Date</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {forms.map((form) => (
-              <TableRow key={form.id}>
-                <TableCell>
-                  <div className="font-medium">{form.name}</div>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">{new Date(form.created_at).toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <Badge className={
-                    form.status === FormStatus.Assigned ? 'bg-yellow-500' :
-                    form.status === FormStatus.Signed ? 'bg-blue-500' :
-                    'bg-green-500'
-                  }>
-                    {form.status}
-                  </Badge>
-                </TableCell>
+
+        {forms.length === 0 ? <h1>no forms assigned yet</h1> :
+          (<Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead className="hidden md:table-cell">Created Date</TableHead>
+                <TableHead>Status</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {
+                forms.map((form) => (
+                  <TableRow key={form.id}>
+                    <TableCell>
+                      <div className="font-medium">{form.name}</div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">{new Date(form.created_at).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                      <Badge className={
+                        form.status === FormStatus.Assigned ? 'bg-yellow-500' :
+                          form.status === FormStatus.Signed ? 'bg-blue-500' :
+                            'bg-green-500'
+                      }>
+                        {form.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+          )
+        }
       </CardContent>
     </Card>
   );
