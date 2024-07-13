@@ -1,18 +1,15 @@
-major hurdles:
+## major hurdles
 
-"sign" in browser / mobile
+(defer) "sign" in browser / mobile
 
-reasonable wins:
-make sure that anyone at the user level can see things in their daycare
-make sure a non-signed in user can upload the form
+## reasonable wins
+
 make sure the bucket has sane RLS
-reject non-pdf
+(defer) make sure that anyone at the user level can see things in their daycare
+(defer) reject non-pdf
+(in progress) move types to one folder (can we not just autogenerate these?)
+(defer) unified table component with filtering etc
 
+## fixes
 
-move types to one folder (can we not just autogenerate these?)
-
-
-fixes:
-not sure why status doesnt get updated in edge function (maybe rls?)
-download signed form isnt working
-when assinging forms change the state on the page
+(defer, can use resend dashboard)not sure why status doesnt get updated in edge function (maybe rls?)
