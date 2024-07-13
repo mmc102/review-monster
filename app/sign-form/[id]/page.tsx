@@ -6,9 +6,9 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-label';
-import { IForm, getFormById } from '@/lib/fileManager';
+import { getFormById } from '@/lib/fileManager';
 import { useRouter } from 'next/navigation';
-import { FormStatus } from '@/types';
+import { FormStatus, IForm } from '@/types';
 
 const SignFormPage = ({ params }: { params: { id: string } }) => {
   const [form, setForm] = useState<IForm | null>(null);
@@ -38,14 +38,25 @@ const SignFormPage = ({ params }: { params: { id: string } }) => {
         }
 
         if (data.signed_storage_path) {
-          const { data : {publicUrl} } = supabase.storage.from('forms').getPublicUrl(data.signed_storage_path);
-          setSignedFormUrl(publicUrl);
-        }
+          console.log("we found the form")
+          const { data: fileData, error: fileError } = await supabase.storage
+            .from('forms')
+            .download(data.signed_storage_path);
 
-        const form = await getFormById(data.form_id);
-        setForm(form);
-        setStudentId(data.student_id);
-        setFormId(data.form_id);
+          if (fileError) {
+            throw fileError;
+          }
+
+          const blobUrl = URL.createObjectURL(fileData);
+
+          setSignedFormUrl(blobUrl);
+        }
+        else {
+          const form = await getFormById(data.form_id);
+          setForm(form);
+          setStudentId(data.student_id);
+          setFormId(data.form_id);
+        }
       } catch (error: any) {
         console.error('Error fetching form:', error);
         setError('Error fetching form');
@@ -53,7 +64,7 @@ const SignFormPage = ({ params }: { params: { id: string } }) => {
     };
 
     fetchForm();
-  }, [params.id]);
+  }, [supabase, params.id]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -81,7 +92,7 @@ const SignFormPage = ({ params }: { params: { id: string } }) => {
 
       const { error: updateError } = await supabase
         .from('signed_forms')
-        .update({ signed_storage_path: data.path,status: FormStatus.Signed, completed: true })
+        .update({ signed_storage_path: data.path, status: FormStatus.Signed, signed_at: new Date().toISOString() })
         .eq('id', params.id);
 
       if (updateError) {
@@ -98,44 +109,45 @@ const SignFormPage = ({ params }: { params: { id: string } }) => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Sign Form</CardTitle>
-        <CardDescription>
-          {signedFormUrl ? 'You\'ve already signed!' : 'Download the form, sign it, and upload the signed form.'}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        {form && (
-          <>
-            <p>Form Name: {form.name}</p>
-            {signedFormUrl ? (
-              <a href={signedFormUrl} download={`${form.name}.pdf`}>
-                <Button>Download Signed Form</Button>
-              </a>
-            ) : (
+    <div className='mt-10'>
+      <Card>
+        <CardHeader>
+          <CardTitle>Sign Form</CardTitle>
+          <CardDescription>
+            {signedFormUrl ? 'You\'ve already signed!' : 'Download the form, sign it, and upload the signed form.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          {signedFormUrl &&
+            (<a href={signedFormUrl} download={`signed_form.pdf`}>
+              <Button>Download Signed Form</Button>
+            </a>)
+          }
+          {form && (
+            <>
+              <p>Form Name: {form.name}</p>
               <a href={form.blobUrl} download={`${form.name}.pdf`}>
                 <Button>Download Form</Button>
               </a>
-            )}
-          </>
-        )}
-        {!signedFormUrl && (
-          <>
-            <Label htmlFor="upload">Upload Signed Form</Label>
-            <Input id="upload" type="file" onChange={handleFileChange} />
-          </>
-        )}
-      </CardContent>
-      <CardFooter>
-        {!signedFormUrl && (
-          <Button onClick={handleUpload} disabled={loading}>
-            {loading ? 'Uploading...' : 'Upload Signed Form'}
-          </Button>
-        )}
-        {error && <p className="text-red-500">{error}</p>}
-      </CardFooter>
-    </Card>
+            </>
+          )}
+          {!signedFormUrl && (
+            <>
+              <Label htmlFor="upload">Upload Signed Form</Label>
+              <Input id="upload" type="file" onChange={handleFileChange} />
+            </>
+          )}
+        </CardContent>
+        <CardFooter>
+          {!signedFormUrl && (
+            <Button onClick={handleUpload} disabled={loading}>
+              {loading ? 'Uploading...' : 'Upload Signed Form'}
+            </Button>
+          )}
+          {error && <p className="text-red-500">{error}</p>}
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 

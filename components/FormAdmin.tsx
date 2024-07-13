@@ -10,6 +10,7 @@ import { FormStatus } from '@/types';
 import Link from 'next/link';
 import SkeletonLoader from './SketetonLoader';
 import { EmailType, queueEmail } from '@/lib/emailSender';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -32,6 +33,7 @@ const FormAdminTable: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const supabase = createClient();
+  const router = useRouter()
 
 
 
@@ -93,9 +95,12 @@ const FormAdminTable: React.FC = () => {
       emailType: EmailType.REMINDER
 
     })
+    alert("Reminder sent")
 
   }
-  const handleShowForm = (assignedFormId: string) => { }
+  const handleShowForm = (assignedFormId: string) => {
+    router.push(`/protected/signed-form/${assignedFormId}`)
+  }
 
   const handleApprove = async (id: string) => {
     try {
@@ -202,7 +207,7 @@ const FormAdminTable: React.FC = () => {
                 <TableCell>{assignedForm.student_email}</TableCell>
                 <TableCell className='flex gap-2'>
                   <Button disabled={assignedForm.status !== FormStatus.Signed} onClick={() => handleApprove(assignedForm.id)}>Approve</Button>
-                  <Button disabled={assignedForm.status !== FormStatus.Signed} onClick={() => handleShowForm(assignedForm.id)}>View Signed Form</Button>
+                  <Button disabled={assignedForm.status === FormStatus.Assigned} onClick={() => handleShowForm(assignedForm.id)}>View Signed Form</Button>
                   <Button disabled={assignedForm.status !== FormStatus.Assigned} onClick={() => handleRemind(assignedForm.id)}>Send Reminder</Button>
                 </TableCell>
               </TableRow>

@@ -4,23 +4,23 @@ import React, { useEffect, useState } from 'react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { FormDetails, getFormDetails } from '@/lib/FormDetails'
 import PDFViewer from './PDFViewer'
-import { FormDetailsStudent, FormStatus } from "@/types"
+import { FormStatus, SignedFormDetails } from "@/types"
+import { getSignedFormDetails } from '@/lib/SignedForms'
 
 interface FormDetailsProps {
-  formId: string
+  assignedFormId: string
 }
 
-const FormDetail: React.FC<FormDetailsProps> = ({ formId }) => {
-  const [form, setForm] = useState<FormDetails | null>(null)
+const SignedFormDetail: React.FC<FormDetailsProps> = ({ assignedFormId }) => {
+  const [form, setForm] = useState<SignedFormDetails | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchFormDetails = async () => {
       try {
-        const formDetails = await getFormDetails(formId)
+        const formDetails = await getSignedFormDetails(assignedFormId)
         setForm(formDetails)
       } catch (error: any) {
         setError(error.message)
@@ -30,7 +30,7 @@ const FormDetail: React.FC<FormDetailsProps> = ({ formId }) => {
     }
 
     fetchFormDetails()
-  }, [formId])
+  }, [assignedFormId])
 
   if (loading) {
     return <div>Loading...</div>
@@ -44,12 +44,11 @@ const FormDetail: React.FC<FormDetailsProps> = ({ formId }) => {
 
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-row'>
       <PDFViewer url={form.blobUrl} height={600} width={600} />
-      <Card>
+      <Card className='max-h-48'>
         <CardHeader className="px-7">
           <CardTitle>{form.name}</CardTitle>
-          <CardDescription>Created on: {new Date(form.created_at).toLocaleDateString()}</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -63,23 +62,21 @@ const FormDetail: React.FC<FormDetailsProps> = ({ formId }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {form.students.map((student: FormDetailsStudent) => (
-                <TableRow key={student.id}>
-                  <TableCell>{student.email}</TableCell>
-                  <TableCell>{student.class}</TableCell>
-                  <TableCell className="hidden md:table-cell">{new Date(student.assigned_at).toLocaleDateString()}</TableCell>
-                  <TableCell className="hidden md:table-cell">{student.signed_at ? new Date(student.signed_at).toLocaleDateString() : '---'}</TableCell>
-                  <TableCell>
-                    <Badge className={
-                      student.status === FormStatus.Assigned ? 'bg-yellow-500' :
-                        student.status === FormStatus.Signed ? 'bg-blue-500' :
-                          'bg-green-500'
-                    }>
-                      {student.status}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
+              <TableRow key={form.student.id}>
+                <TableCell>{form.student.email}</TableCell>
+                <TableCell>{form.student.class}</TableCell>
+                <TableCell className="hidden md:table-cell">{new Date(form.student.assigned_at).toLocaleDateString()}</TableCell>
+                <TableCell className="hidden md:table-cell">{form.student.signed_at ? new Date(form.student.signed_at).toLocaleDateString() : '---'}</TableCell>
+                <TableCell>
+                  <Badge className={
+                    form.student.status === FormStatus.Assigned ? 'bg-yellow-500' :
+                      form.student.status === FormStatus.Signed ? 'bg-blue-500' :
+                        'bg-green-500'
+                  }>
+                    {form.student.status}
+                  </Badge>
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </CardContent>
@@ -88,4 +85,4 @@ const FormDetail: React.FC<FormDetailsProps> = ({ formId }) => {
   )
 }
 
-export default FormDetail
+export default SignedFormDetail

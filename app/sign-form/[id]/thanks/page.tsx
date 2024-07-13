@@ -8,13 +8,13 @@ const ThankYouPage = ({ params }: { params: { id: string } }) => {
 
 
   return (
-    <Card>
+    <Card className='mt-10 gap-3'>
       <CardHeader>
         <CardTitle>Thank You!</CardTitle>
       </CardHeader>
       <CardContent>
         <CardDescription>Thank you for signing the form. Your submission has been received.</CardDescription>
-        <Button onClick={() => router.push(`/sign-form/${params.id}`)}>Back to Form</Button>
+        <Button className="mt-4" onClick={() => router.push(`/sign-form/${params.id}`)}>Back to Form</Button>
       </CardContent>
     </Card>
   );

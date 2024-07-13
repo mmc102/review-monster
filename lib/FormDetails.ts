@@ -1,17 +1,10 @@
 
 import { createClient } from "@/utils/supabase/client";
-import { IForm, pullFormBlobs } from "./fileManager";
-import { FormStatus } from "@/types";
+import { pullFormBlobs } from "./fileManager";
+import { FormDetailsStudent, FormStatus } from "@/types";
 
 
-export interface FormDetailsStudent {
-  id: string
-  email: string
-  class: string
-  assigned_at: string
-  status: FormStatus
-  signed_at: string
-}
+
 export interface FormDetails {
   id: string
   name: string

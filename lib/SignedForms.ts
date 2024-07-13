@@ -1,4 +1,6 @@
 
+import { pullFormBlobs } from "./fileManager";
+import { FormDetailsStudent, IForm, SignedFormDetails } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 
 
@@ -60,3 +62,69 @@ export const getStudentInfo = async (studentId: string): Promise<StudentInfo> =>
 
   return data as object as StudentInfo;
 };
+
+export async function getSignedFormDetails(assignedFormId: string): Promise<SignedFormDetails> {
+
+  const supabase = createClient()
+  const { data: formData, error: formError } = await supabase
+    .from('signed_forms')
+    .select('id, form_id (name) , signed_storage_path , created_at, signed_at')
+    .eq('id', assignedFormId)
+    .single()
+
+
+
+
+  if (formError) {
+    throw formError
+  }
+  const parsedFormData: Omit<IForm, 'blobUrl'> = {
+    id: formData.id,
+    name: formData.form_id.name,
+    created_at: formData.created_at,
+    signed_at: formData.signed_at,
+    storage_path: formData.signed_storage_path
+  }
+  const formDataWithBlobs = await pullFormBlobs([parsedFormData])
+
+  const { data: studentData, error: studentsError } = await supabase
+    .from('signed_forms')
+    .select(`
+        signed_at,
+        status,
+        created_at,
+        student_id (
+          id,
+          email,
+          class_id (
+           name, 
+           year
+          )
+        )
+      `)
+    .eq('id', assignedFormId).single()
+
+  if (studentsError || studentData === null) {
+    console.log('Error fetching student:', studentsError)
+    throw studentsError
+  }
+
+  const student: FormDetailsStudent = {
+    id: studentData.student_id.id,
+    email: studentData.student_id.email,
+    class: `${studentData.student_id.class_id.name} (${studentData.student_id.class_id.year})`,
+    assigned_at: studentData.created_at,
+    signed_at: studentData.signed_at,
+    status: studentData.status
+  }
+
+
+  const val = {
+    ...formDataWithBlobs[0],
+    student
+  }
+
+
+  return val
+}
+

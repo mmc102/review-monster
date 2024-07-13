@@ -1,12 +1,7 @@
+import { IForm } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 
-export interface IForm {
-  id: string
-  storage_path: string;
-  created_at: string;
-  name: string
-  blobUrl: string
-}
+
 
 interface SignedForm {
   student_id: string;
@@ -35,26 +30,26 @@ export async function createForm(file: File, name: String): Promise<any> {
 
   const supabase = createClient();
 
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    if (!user) {
-        throw new Error('User not authenticated');  
-    }
-    const { data: daycareData, error: daycareError } = await supabase
-      .from('user_daycares')
-      .select('daycare_id')
-      .eq('user_id', user.id).single();
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+  const { data: daycareData, error: daycareError } = await supabase
+    .from('user_daycares')
+    .select('daycare_id')
+    .eq('user_id', user.id).single();
 
-     if (!daycareData || daycareError) {
-        throw new Error('issue getting the daycare id');  
-    }
+  if (!daycareData || daycareError) {
+    throw new Error('issue getting the daycare id');
+  }
 
   const storagePath: string = await uploadFile(file)
   const { data, error } = await supabase
     .from('forms')
-    .insert([{ storage_path: storagePath, user_id: user?.id , name, daycare_id: daycareData.daycare_id}])
+    .insert([{ storage_path: storagePath, user_id: user?.id, name, daycare_id: daycareData.daycare_id }])
 
   if (error) {
     throw error
@@ -68,7 +63,7 @@ export async function createForm(file: File, name: String): Promise<any> {
 
 async function downloadBlob(storagePath: string): Promise<object> {
 
-    const supabase = createClient();
+  const supabase = createClient();
   const { data, error } = await supabase.storage
     .from('forms')
     .download(storagePath)
@@ -82,27 +77,27 @@ async function downloadBlob(storagePath: string): Promise<object> {
 
 export const pullFormBlobs = async (data: Omit<IForm, 'blobUrl'>[]): Promise<IForm[]> => {
 
-    const supabase = createClient();
-    const formsWithBlobs = await Promise.all(
-        data.map(async (form) => {
-        const { data: fileData, error: fileError } = await supabase.storage
-            .from('forms')
-            .download(form.storage_path)
+  const supabase = createClient();
+  const formsWithBlobs = await Promise.all(
+    data.map(async (form) => {
+      const { data: fileData, error: fileError } = await supabase.storage
+        .from('forms')
+        .download(form.storage_path)
 
-        if (fileError) {
-            throw fileError
-        }
+      if (fileError) {
+        throw fileError
+      }
 
-        const blobUrl = URL.createObjectURL(fileData)
-        return { ...form, blobUrl }
-        })
-    )
+      const blobUrl = URL.createObjectURL(fileData)
+      return { ...form, blobUrl }
+    })
+  )
   return formsWithBlobs
 }
 
 
 export async function getUserForms(): Promise<IForm[]> {
-    
+
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -145,11 +140,6 @@ const pullFormBlob = async (form: Omit<IForm, 'blobUrl'>): Promise<IForm> => {
 
 export const getFormById = async (formId: string): Promise<IForm> => {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error('User not authenticated');
-  }
 
   const { data, error } = await supabase
     .from('forms')

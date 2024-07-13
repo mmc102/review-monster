@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import StudentSelectionTable from '@/components/StudentSelectionTable';
 import { FormStatus } from "@/types";
 import { EmailProps, EmailType, queueEmail } from "@/lib/emailSender";
+import { useRouter } from "next/navigation";
 
 
 interface Form {
@@ -23,6 +24,7 @@ const FormAssignment: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
+  const router = useRouter()
 
   useEffect(() => {
     const fetchForms = async () => {
@@ -38,7 +40,7 @@ const FormAssignment: React.FC = () => {
     };
 
     fetchForms();
-  }, []);
+  }, [supabase]);
 
   const handleSubmit = async () => {
     if (!selectedForm || selectedStudents.length === 0) {
@@ -57,7 +59,6 @@ const FormAssignment: React.FC = () => {
         student_id: studentId,
         form_id: selectedForm,
         status: FormStatus.Assigned,
-        completed: false,
         user_id: user.id,
       }));
 
@@ -79,6 +80,7 @@ const FormAssignment: React.FC = () => {
       });
 
       alert('Forms assigned successfully');
+      router.push('/protected/dashboard');
     } catch (error: any) {
       alert(`Error assigning forms: ${error.message}`);
     }

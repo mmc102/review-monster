@@ -17,10 +17,11 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { useEffect, useState } from "react"
-import { IForm, getUserForms } from "@/lib/fileManager";
+import { getUserForms } from "@/lib/fileManager";
 import PDFViewer from "./PDFViewer";
 import { Button } from "./ui/button";
 import SkeletonLoader from './SketetonLoader'
+import { IForm } from '@/types'
 
 
 

@@ -6,7 +6,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-label';
-import { IForm, getFormById } from '@/lib/fileManager';
+import { getFormById } from '@/lib/fileManager';
+import { IForm } from '@/types';
 
 interface SignFormPageProps {
   id: string;
