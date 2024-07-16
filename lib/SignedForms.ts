@@ -80,7 +80,7 @@ export async function getSignedFormDetails(assignedFormId: string): Promise<Sign
   }
   const parsedFormData: Omit<IForm, 'blobUrl'> = {
     id: formData.id,
-    name: formData.form_id.name,
+    name: formData.form_id[0].name,
     created_at: formData.created_at,
     signed_at: formData.signed_at,
     storage_path: formData.signed_storage_path
@@ -110,9 +110,9 @@ export async function getSignedFormDetails(assignedFormId: string): Promise<Sign
   }
 
   const student: FormDetailsStudent = {
-    id: studentData.student_id.id,
-    email: studentData.student_id.email,
-    class: `${studentData.student_id.class_id.name} (${studentData.student_id.class_id.year})`,
+    id: studentData.student_id[0].id,
+    email: studentData.student_id[0].email,
+    class: `${studentData.student_id[0].class_id[0].name} (${studentData.student_id[0].class_id[0].year})`,
     assigned_at: studentData.created_at,
     signed_at: studentData.signed_at,
     status: studentData.status
