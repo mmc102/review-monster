@@ -15,7 +15,7 @@ const StudentsPage: React.FC = () => {
       <BreadcrumbWrapper paths={path} />
       <div className="mt-10 flex flex-row gap-10">
         <StudentsTable students={students} setStudents={setStudents} />
-        <NewStudentCard setStudents={setStudents} />
+        <NewStudentCard setStudents={setStudents} prevStudents={students} />
       </div>
     </>
   )

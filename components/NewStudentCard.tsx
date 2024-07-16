@@ -10,7 +10,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue, SelectGr
 import { Class, Student } from '@/types';
 import { getUser } from "@/lib/utils";
 
-const NewStudentCard = ({ setStudents }: { setStudents: (students: Student[]) => void }) => {
+const NewStudentCard = ({ prevStudents, setStudents }: { prevStudents: Student[], setStudents: (students: Student[]) => void }) => {
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [studentClass, setStudentClass] = useState<string | undefined>(undefined);
@@ -102,9 +102,18 @@ const NewStudentCard = ({ setStudents }: { setStudents: (students: Student[]) =>
 
       if (error) throw error;
 
-      const newStudent = data[0]
-      // eslint-disable-next-line
-      setStudents(prevStudents => [...prevStudents, newStudent]);
+      const newStudent: Student = {
+        id: data[0].id,
+        email: data[0].email,
+        name: data[0].name,
+        created_at: data[0].created_at,
+        class_id: {
+          name: data[0].class_id[0].name,
+          year: data[0].class_id[0].year
+        }
+      };
+
+      setStudents([...prevStudents, newStudent]);
       setEmail('');
       setName('');
       setStudentClass(undefined);
