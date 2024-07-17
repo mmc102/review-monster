@@ -10,6 +10,7 @@ import StudentSelectionTable from '@/components/StudentSelectionTable';
 import { FormStatus } from "@/types";
 import { EmailProps, EmailType, queueEmail } from "@/lib/emailSender";
 import { useRouter } from "next/navigation";
+import { getUser } from "@/lib/utils";
 
 
 interface Form {
@@ -48,7 +49,7 @@ const FormAssignment: React.FC = () => {
       return;
     }
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = await getUser()
     if (!user) {
       alert('User not authenticated');
       return;
@@ -60,6 +61,7 @@ const FormAssignment: React.FC = () => {
         form_id: selectedForm,
         status: FormStatus.Assigned,
         user_id: user.id,
+        daycare_id: user.daycare_id,
       }));
 
       const { data, error } = await supabase.from('signed_forms').insert(assignments).select();

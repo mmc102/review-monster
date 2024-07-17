@@ -38,7 +38,6 @@ const SignFormPage = ({ params }: { params: { id: string } }) => {
         }
 
         if (data.signed_storage_path) {
-          console.log("we found the form")
           const { data: fileData, error: fileError } = await supabase.storage
             .from('forms')
             .download(data.signed_storage_path);

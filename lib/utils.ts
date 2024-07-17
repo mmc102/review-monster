@@ -12,6 +12,24 @@ interface SupabaseDaycareResponse {
   daycare_id: string;
 }
 
+
+export async function getDaycareId(user_id: string): Promise<{ daycare_id: string | null }> {
+  const supabase = createClient()
+
+  const { data: daycareData, error: daycareError } = await supabase
+    .from('user_daycares')
+    .select('daycare_id')
+    .eq('user_id', user_id)
+    .single<SupabaseDaycareResponse>();
+
+  if (daycareError) {
+    throw daycareError
+  } else {
+    return { daycare_id: daycareData.daycare_id };
+  }
+}
+
+
 export async function getUser(): Promise<WrappedUser> {
   const supabase = createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser();

@@ -11,6 +11,7 @@ import Link from 'next/link';
 import SkeletonLoader from './SketetonLoader';
 import { EmailType, queueEmail } from '@/lib/emailSender';
 import { useRouter } from 'next/navigation';
+import { getUser } from '@/lib/utils';
 
 
 
@@ -38,7 +39,10 @@ const FormAdminTable: React.FC = () => {
 
 
   useEffect(() => {
+
+
     const fetchForms = async () => {
+      const user = await getUser()
       try {
         const { data, error } = await supabase
           .from('signed_forms')
@@ -59,7 +63,7 @@ const FormAdminTable: React.FC = () => {
               id,
               name
             )
-          `);
+          `).eq('daycare_id', user.daycare_id);
 
         if (error) {
           throw error;
