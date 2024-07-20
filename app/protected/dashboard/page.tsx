@@ -26,15 +26,11 @@ export default async function Dashboard() {
   const supabase = createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (!user) {
-    throw authError
+    return redirect("/login");
   }
 
   const { daycare_id } = await getDaycareId(supabase, user.id)
 
-
-  if (!user) {
-    return redirect("/login");
-  }
 
   if (!daycare_id) {
     return redirect("/protected/create-daycare");
@@ -43,8 +39,8 @@ export default async function Dashboard() {
   return (
     <div className="mt-10 flex w-full flex-1 flex-col items-center gap-20">
       <div className="flex flex-1 flex-col gap-20 px-3">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <Card>
+        <div className="grid grid-cols-2 gap-6">
+          <Card className="max-w-96">
             <CardHeader>
               <CardTitle>Manage Students</CardTitle>
               <CardDescription>View and create students</CardDescription>
@@ -55,7 +51,18 @@ export default async function Dashboard() {
               </Link>
             </CardFooter>
           </Card>
-          <Card>
+          <Card className="max-w-96">
+            <CardHeader>
+              <CardTitle>Manage Email Templates</CardTitle>
+              <CardDescription>View and edit email templates </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <Link href="/protected/emails">
+                <Button> Emails<ArrowRightIcon /></Button>
+              </Link>
+            </CardFooter>
+          </Card>
+          <Card className="max-w-96">
             <CardHeader>
               <CardTitle>Manage Forms</CardTitle>
               <CardDescription>View and create forms</CardDescription>
@@ -66,7 +73,7 @@ export default async function Dashboard() {
               </Link>
             </CardFooter>
           </Card>
-          <Card>
+          <Card className="max-w-96">
             <CardHeader>
               <CardTitle>Assign Forms</CardTitle>
               <CardDescription>Assign forms to students</CardDescription>

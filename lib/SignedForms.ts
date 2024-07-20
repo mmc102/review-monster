@@ -63,27 +63,36 @@ export const getStudentInfo = async (studentId: string): Promise<StudentInfo> =>
   return data as object as StudentInfo;
 };
 
+interface FormData {
+  id: any;
+  form_id: {
+    name: any;
+  };
+  signed_storage_path: any;
+  created_at: any;
+  signed_at: any;
+}
+
 export async function getSignedFormDetails(assignedFormId: string): Promise<SignedFormDetails> {
 
   const supabase = createClient()
   const { data: formData, error: formError } = await supabase
     .from('signed_forms')
-    .select('id, form_id (name) , signed_storage_path , created_at, signed_at')
+    .select('id, form_id (name) , signed_storage_path , created_at, signed_at, status')
     .eq('id', assignedFormId)
     .single()
-
-
-
 
   if (formError) {
     throw formError
   }
+
   const parsedFormData: Omit<IForm, 'blobUrl'> = {
     id: formData.id,
-    name: formData.form_id[0].name,
+    name: (formData as object as { form_id: { name: string } }).form_id.name,
     created_at: formData.created_at,
     signed_at: formData.signed_at,
-    storage_path: formData.signed_storage_path
+    storage_path: formData.signed_storage_path,
+    status: formData.status
   }
   const formDataWithBlobs = await pullFormBlobs([parsedFormData])
 
@@ -109,10 +118,13 @@ export async function getSignedFormDetails(assignedFormId: string): Promise<Sign
     throw studentsError
   }
 
+  const parsedStudentData = studentData as object as { signed_at: any, status: any, created_at: any, student_id: { email: string, class_id: { name: any, year: any }, id: any } }
+
+
   const student: FormDetailsStudent = {
-    id: studentData.student_id[0].id,
-    email: studentData.student_id[0].email,
-    class: `${studentData.student_id[0].class_id[0].name} (${studentData.student_id[0].class_id[0].year})`,
+    id: parsedStudentData.student_id.id,
+    email: parsedStudentData.student_id.email,
+    class: `${parsedStudentData.student_id.class_id.name} (${parsedStudentData.student_id.class_id.year})`,
     assigned_at: studentData.created_at,
     signed_at: studentData.signed_at,
     status: studentData.status

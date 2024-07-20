@@ -33,6 +33,7 @@ export interface IForm {
   created_at: string;
   name: string
   blobUrl: string
+  status: FormStatus
 }
 
 export interface FormDetailsStudent {
@@ -55,4 +56,5 @@ export interface SignedFormDetails {
   created_at: string
   blobUrl: string
   student: FormDetailsStudent
+  status: FormStatus
 }

@@ -1,12 +1,15 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell, TableFooter } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import PDFViewer from './PDFViewer'
 import { FormStatus, SignedFormDetails } from "@/types"
 import { getSignedFormDetails } from '@/lib/SignedForms'
+import { Button } from './ui/button'
+import { createClient } from '@/utils/supabase/client'
+import { useRouter } from 'next/navigation'
 
 interface FormDetailsProps {
   assignedFormId: string
@@ -16,6 +19,28 @@ const SignedFormDetail: React.FC<FormDetailsProps> = ({ assignedFormId }) => {
   const [form, setForm] = useState<SignedFormDetails | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
+
+  const handleApprove = async () => {
+    try {
+      const supabase = createClient()
+      const { error } = await supabase
+        .from('signed_forms')
+        .update({ status: FormStatus.Accepted })
+        .eq('id', assignedFormId);
+
+      if (error) {
+        throw error;
+      }
+
+    } catch (error: any) {
+      console.error('Error approving form:', error);
+      setError('Error approving form');
+    }
+    router.push('/protected/dashboard')
+
+  };
+
 
   useEffect(() => {
     const fetchFormDetails = async () => {
@@ -46,7 +71,7 @@ const SignedFormDetail: React.FC<FormDetailsProps> = ({ assignedFormId }) => {
   return (
     <div className='flex flex-row'>
       <PDFViewer url={form.blobUrl} height={600} width={600} />
-      <Card className='max-h-48'>
+      <Card className='max-h-[250px]'>
         <CardHeader className="px-7">
           <CardTitle>{form.name}</CardTitle>
         </CardHeader>
@@ -78,7 +103,9 @@ const SignedFormDetail: React.FC<FormDetailsProps> = ({ assignedFormId }) => {
                 </TableCell>
               </TableRow>
             </TableBody>
+            <Button className='mt-2' disabled={form.status !== FormStatus.Signed} onClick={() => handleApprove()}>Approve</Button>
           </Table>
+
         </CardContent>
       </Card>
     </div>

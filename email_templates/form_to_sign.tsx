@@ -1,17 +1,16 @@
-
-export const generateSignEmailBody = (link: string, studentName: string, daycareName: string) => (
+export const generateSignEmailBody = () => (
     {
         body: `
             <html>
             <body>
             <p>Dear Parent,</p>
             <p>We hope this email finds you well.</p>
-            <p>Please sign the following form for your child, ${studentName}</p>
-            <p><a href="${link}" target="_blank">${link}</a></p>
+            <p>Please sign the following form for your child, \${student_name}</p>
+            <p>\${link}</p>
             <p>Let us know if you have any questions</p>
             <p>Thank you!</p>
-            <p>${daycareName}</p>
+            <p>\${daycare_name}</p>
             </body>
             </html>`,
-        subject: `Please sign the form for ${studentName}`
+        subject: `Please sign a form for \${student_name}`
     })

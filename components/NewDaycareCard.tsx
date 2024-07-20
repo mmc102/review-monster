@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation'
+import { saveEmails } from "@/lib/emailSender";
+import { generateReminderEmail } from "@/email_templates/reminder_email";
+import { generateSignEmailBody } from "@/email_templates/form_to_sign";
 
 const NewDaycareCard = () => {
     const [name, setName] = useState<string>('');
@@ -40,10 +43,12 @@ const NewDaycareCard = () => {
                 daycare_id: data.id,
             })
 
-
-
             if (UserError) throw UserError;
 
+            //consider moving this into an initalization function
+            const { subject: reminderSubject, body: reminderBody } = generateReminderEmail()
+            const { subject: initialSubject, body: initialBody } = generateSignEmailBody()
+            saveEmails({ reminderBody, reminderSubject, initialBody, initialSubject })
 
             router.push('/protected/dashboard');
 

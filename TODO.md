@@ -4,9 +4,7 @@
 
 ## reasonable wins
 
-(bug) view signed for is not working
-(bug) 404 on dashboard
-
+(bug) make sure not logged in can submit form
 make sure the bucket has sane RLS
 (defer) make sure that anyone at the user level can see things in their daycare
 (defer) reject non-pdf
