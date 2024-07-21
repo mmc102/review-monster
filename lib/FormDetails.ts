@@ -1,7 +1,7 @@
 
 import { createClient } from "@/utils/supabase/client";
 import { pullFormBlobs } from "./fileManager";
-import { FormDetailsStudent, FormStatus } from "@/types";
+import { FormDetailsStudent, FormStatus, IForm } from "@/types";
 
 
 
@@ -25,7 +25,7 @@ export async function getFormDetails(formId: string): Promise<FormDetails> {
   if (formError) {
     throw formError
   }
-  const formDataWithBlobs = await pullFormBlobs([formData])
+  const formDataWithBlobs = await pullFormBlobs([formData as IForm])
 
   const { data: studentsData, error: studentsError } = await supabase
     .from('signed_forms')

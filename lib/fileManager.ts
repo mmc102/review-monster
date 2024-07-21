@@ -3,12 +3,7 @@ import { createClient } from "@/utils/supabase/client";
 
 
 
-interface SignedForm {
-  student_id: string;
-  form_id: string;
-  signed_storage_path: string;
-  created_at?: string;
-}
+
 export async function uploadFile(file: File): Promise<string> {
 
   const supabase = createClient();
@@ -75,7 +70,12 @@ async function downloadBlob(storagePath: string): Promise<object> {
   return data
 }
 
-export const pullFormBlobs = async (data: Omit<IForm, 'blobUrl'>[]): Promise<IForm[]> => {
+
+interface PullBlobProps {
+  storage_path: string;
+}
+
+export const pullFormBlobs = async (data: PullBlobProps[]): Promise<IForm[]> => {
 
   const supabase = createClient();
   const formsWithBlobs = await Promise.all(
@@ -92,7 +92,7 @@ export const pullFormBlobs = async (data: Omit<IForm, 'blobUrl'>[]): Promise<IFo
       return { ...form, blobUrl }
     })
   )
-  return formsWithBlobs
+  return formsWithBlobs as IForm[]
 }
 
 
@@ -118,11 +118,11 @@ export async function getUserForms(): Promise<IForm[]> {
     return []
   }
 
-  return pullFormBlobs(data)
+  return pullFormBlobs(data as object as Omit<IForm, 'blobUrl'>[])
 }
 
 
-const pullFormBlob = async (form: Omit<IForm, 'blobUrl'>): Promise<IForm> => {
+const pullFormBlob = async (form: Omit<IForm, 'blobUrl' | 'status'>): Promise<IForm> => {
   const supabase = createClient();
   const { data: fileData, error: fileError } = await supabase.storage
     .from('forms')
@@ -133,12 +133,12 @@ const pullFormBlob = async (form: Omit<IForm, 'blobUrl'>): Promise<IForm> => {
   }
 
   const blobUrl = URL.createObjectURL(fileData);
-  return { ...form, blobUrl };
+  return { ...form, blobUrl } as IForm;
 };
 
 
 
-export const getFormById = async (formId: string): Promise<IForm> => {
+export const getFormById = async (formId: string): Promise<Omit<IForm, "status">> => {
   const supabase = createClient();
 
   const { data, error } = await supabase

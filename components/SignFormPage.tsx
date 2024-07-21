@@ -36,7 +36,7 @@ const SignFormPage: React.FC<SignFormPageProps> = ({ id }) => {
           throw error;
         }
 
-        const form = await getFormById(data.form_id);
+        const form = await getFormById(data.form_id) as IForm;
         setForm(form);
         setStudentId(data.student_id);
         setFormId(data.form_id);

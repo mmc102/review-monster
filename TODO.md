@@ -6,6 +6,7 @@
 
 (bug) make sure not logged in can submit form
 make sure the bucket has sane RLS
+(defer) unifty types-> assigned form and form
 (defer) make sure that anyone at the user level can see things in their daycare
 (defer) reject non-pdf
 (in progress) move types to one folder (can we not just autogenerate these?)
