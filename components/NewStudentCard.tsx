@@ -97,7 +97,7 @@ const NewStudentCard = ({ prevStudents, setStudents }: { prevStudents: Student[]
             name,
             year
           )
-        `);
+        `).single();
 
 
       if (error) throw error;
@@ -105,6 +105,9 @@ const NewStudentCard = ({ prevStudents, setStudents }: { prevStudents: Student[]
       const castData = data as object as {
         id: string, email: string, name: string, created_at: string, class_id: { name: string, year: number }
       }
+
+
+      console.log(castData)
 
       const newStudent: Student = {
         id: castData.id,
