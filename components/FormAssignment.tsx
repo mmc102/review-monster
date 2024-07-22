@@ -11,6 +11,7 @@ import { FormStatus } from "@/types";
 import { EmailProps, EmailType, queueEmail } from "@/lib/emailSender";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/lib/utils";
+import { getUserForms } from "@/lib/fileManager";
 
 
 interface Form {
@@ -30,8 +31,7 @@ const FormAssignment: React.FC = () => {
   useEffect(() => {
     const fetchForms = async () => {
       try {
-        const { data: formsData, error: formsError } = await supabase.from('forms').select('*');
-        if (formsError) throw formsError;
+        const formsData = await getUserForms();
         setForms(formsData);
       } catch (error: any) {
         setError(error.message);
