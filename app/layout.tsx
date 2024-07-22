@@ -8,7 +8,7 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "KenzCare",
+  title: "Daycare Documents",
   description: "Easy forms for daycares",
 };
 
@@ -20,21 +20,21 @@ export default function RootLayout({
   return (
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
-    <main className="flex min-h-screen flex-col items-center">
-        <nav className="flex h-16 w-full justify-center border-b border-b-foreground/10">
+        <main className="flex min-h-screen flex-col items-center">
+          <nav className="flex h-16 w-full justify-center border-b border-b-foreground/10">
             <div className="flex w-3/4 items-center justify-between p-3 text-sm">
               <h1>Daycare Forms</h1>
-                <AuthButton />
+              <AuthButton />
             </div>
-        </nav>
-        <div className="mb-10 w-full grow px-10">
+          </nav>
+          <div className="mb-10 w-full grow px-10">
             {children}
-        </div>
-        <footer className="flex w-full justify-center border-t border-t-foreground/10 p-8 text-center text-xs">
+          </div>
+          <footer className="flex w-full justify-center border-t border-t-foreground/10 p-8 text-center text-xs">
             <p>Daycare Forms</p>
-        </footer>
-    </main>
-</body>
+          </footer>
+        </main>
+      </body>
     </html>
   );
 }
