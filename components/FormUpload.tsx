@@ -68,7 +68,9 @@ const FormUpload: React.FC = () => {
           onChange={handleFileChange}
           required
         />
-        {message && <p className="text-red-500">{message}</p>}
+        <CardDescription>
+          {message && <p className="text-green-500">{message}</p>}
+        </CardDescription>
       </CardContent>
       <CardFooter>
         <Button onClick={handleUpload} className="w-full">
