@@ -5,6 +5,7 @@
 ## reasonable wins
 
 (bug) make sure not logged in can submit form
+(bug) double replace tags in html
 make sure the bucket has sane RLS
 (defer) unifty types-> assigned form and form
 (defer) make sure that anyone at the user level can see things in their daycare
