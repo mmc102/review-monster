@@ -20,7 +20,7 @@ const handler = async (request: Request): Promise<Response> => {
 
   try {
 
-  const supabase = createClient(
+    const supabase = createClient(
       Deno.env.get('SUPABASE_URL'),
       Deno.env.get('SUPABASE_ANON_KEY'),
     )
@@ -45,7 +45,7 @@ const handler = async (request: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'matt@daycaredocuments.com',
+        from: 'matt@businessdocuments.com',
         to: [recipient_email],
         subject: subject,
         html: body,

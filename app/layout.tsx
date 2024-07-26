@@ -8,8 +8,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Daycare Documents",
-  description: "Easy forms for daycares",
+  title: "Business Documents",
+  description: "Easy forms for business",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
         <main className="flex min-h-screen flex-col items-center">
           <nav className="flex h-16 w-full justify-center border-b border-b-foreground/10">
             <div className="flex w-3/4 items-center justify-between p-3 text-sm">
-              <h1>Daycare Forms</h1>
+              <h1>Review Monster</h1>
               <AuthButton />
             </div>
           </nav>
@@ -31,7 +31,7 @@ export default function RootLayout({
             {children}
           </div>
           <footer className="flex w-full justify-center border-t border-t-foreground/10 p-8 text-center text-xs">
-            <p>Daycare Forms</p>
+            <p>Review Monster</p>
           </footer>
         </main>
       </body>

@@ -46,7 +46,7 @@ export interface FormDetailsStudent {
 }
 
 export interface WrappedUser extends User {
-  daycare_id: string;
+  business_id: string;
 
 }
 

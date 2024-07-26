@@ -13,7 +13,7 @@ export const generateReminderEmail = () => {
             </p>
             <p>Let us know if you have any questions</p>
             <p>Thank you!</p>
-            <p>\${daycare_name}</p>
+            <p>\${business_name}</p>
             </body>
             </html>`,
         subject: "Reminder: Please sign the form for ${student_name}"

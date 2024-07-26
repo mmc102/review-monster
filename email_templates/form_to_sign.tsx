@@ -9,7 +9,7 @@ export const generateSignEmailBody = () => (
             <p>\${link}</p>
             <p>Let us know if you have any questions</p>
             <p>Thank you!</p>
-            <p>\${daycare_name}</p>
+            <p>\${business_name}</p>
             </body>
             </html>`,
         subject: `Please sign a form for \${student_name}`
