@@ -63,6 +63,21 @@ function WrappedBadge({ status }: { status: string }) {
   );
 }
 
+export function CommentThread({ data }: { data: QueueItem }) {
+
+  return (
+    <>
+      <div className="text-sm text-gray-700 mb-2 bg-gray-100 p-2 rounded-md">
+        {data.review}
+      </div>
+      <div className="text-sm text-gray-700 ml-4 pl-4 border-l-2 border-gray-200">
+        <div className="font-semibold">Response:</div>
+        {data.response}
+      </div>
+    </>
+  )
+}
+
 
 function MobileCard({ data }: { data: QueueItem }) {
   return (
@@ -88,12 +103,12 @@ function MobileCard({ data }: { data: QueueItem }) {
         </DropdownMenu>
       </div>
       <div className="mb-2 font-medium">{data.reviewer}</div>
-      <div className="text-sm text-gray-700 mb-2">{data.review}</div>
-      <div className="text-sm text-gray-700">{data.response}</div>
+      <CommentThread data={data} />
       <div className="text-sm text-gray-500 mt-2">{data.createdDate}</div>
     </div>
-  )
+  );
 }
+
 
 
 function DesktopRow({ data }: { data: QueueItem }) {
