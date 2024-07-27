@@ -31,7 +31,7 @@ export default function RootLayout({
       <body className="bg-background text-foreground">
         <main className="flex min-h-screen flex-col items-center">
           <nav className="sticky top-0 z-50 flex h-16 w-full  border-b border-b-foreground/10 bg-white">
-            <div className="flex w-3/4 items-center justify-between text-sm">
+            <div className="flex w-[100%] px-2 items-center justify-between text-sm sm:px-10">
               <Sheet>
                 <SheetTrigger asChild>
                   <Button size="icon" variant="outline" className="sm:hidden">
@@ -48,7 +48,7 @@ export default function RootLayout({
             </div>
           </nav>
           <SideBar />
-          <div className="mb-10 w-full grow px-10">
+          <div className="mb-10 w-full grow px-2 sm:px-10">
             {children}
           </div>
           <footer className="flex w-full justify-center border-t border-t-foreground/10 p-8 text-center text-xs">

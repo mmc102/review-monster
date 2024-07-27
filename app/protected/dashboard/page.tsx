@@ -272,18 +272,16 @@ export default function Dashboard() {
       <div className="flex min-h-screen w-full flex-col bg-muted/40">
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
 
-          <main className="grid flex-1 items-start gap-4  sm:py-0 md:gap-8">
+          <main className="grid flex-1 gap-4  sm:py-0 md:gap-8">
             <Tabs defaultValue="all">
-              <div className="flex items-center">
-                <TabsList>
-                  <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="pending">Pending</TabsTrigger>
-                  <TabsTrigger value="approved">Approved</TabsTrigger>
-                  <TabsTrigger value="rejected">
-                    Rejected
-                  </TabsTrigger>
-                </TabsList>
-              </div>
+              <TabsList className="mt-2 w-full items-center justify-between sm:w-[300px] sm:justify-normal">
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="pending">Pending</TabsTrigger>
+                <TabsTrigger value="approved">Approved</TabsTrigger>
+                <TabsTrigger value="rejected">
+                  Rejected
+                </TabsTrigger>
+              </TabsList>
               <TabsContent value="all">
                 <InnerTabContent queueItems={queueItems} />
               </TabsContent>
