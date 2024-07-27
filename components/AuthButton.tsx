@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "./ui/button";
+import { getUser } from "@/lib/getters/get_user";
 
 export default async function AuthButton() {
   const supabase = createClient();
@@ -28,6 +29,6 @@ export default async function AuthButton() {
           Logout
         </Button>
       </form>
-    </div>
+    </div >
   ) : null
 }
