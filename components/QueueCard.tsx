@@ -1,22 +1,15 @@
+import { QueueItem } from "@/app/protected/dashboard/page";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
-import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 
-
-interface QueueItem {
-    reviewer: string;
-    review: string;
-    response: string;
+interface QueueCardProps {
+    queueItem: QueueItem;
+    onStatusChange: (newStatus: string) => void;
 }
 
-export default function QueueCard(queueItem: QueueItem) {
-
-
-
-
-
+export default function QueueCard({ queueItem, onStatusChange }: QueueCardProps) {
     return (
-
         <Card className="max-w-[500px]">
             <CardContent>
                 <CardHeader>
@@ -24,16 +17,15 @@ export default function QueueCard(queueItem: QueueItem) {
                     <CardDescription>{queueItem.review}</CardDescription>
                 </CardHeader>
                 <CardDescription>
-                    <Input>
+                    <Textarea>
                         {queueItem.response}
-                    </Input>
+                    </Textarea>
                 </CardDescription>
             </CardContent>
             <CardFooter className="flex gap-2">
-                <Button >Respond</Button>
-                <Button variant="secondary">Ignore</Button>
+                <Button onClick={() => onStatusChange('approved')}>Respond</Button>
+                <Button variant="secondary" onClick={() => onStatusChange('rejected')}>Ignore</Button>
             </CardFooter>
         </Card>
-
-    )
+    );
 }

@@ -1,9 +1,7 @@
+'use client'
+import ReviewQueue from '@/components/ReviewQueue';
 
-export default function ReviewQueue() {
-    return (
-        <div>
-            <h1>Review Queue</h1>
-            <p>todo</p>
-        </div>
-    )
+export default function ReviewPage() {
+    return <ReviewQueue />
+
 }

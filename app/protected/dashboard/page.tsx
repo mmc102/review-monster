@@ -1,15 +1,5 @@
-import Link from "next/link"
 import {
-  Home,
-  LineChart,
-  ListFilter,
   MoreHorizontal,
-  Package,
-  Package2,
-  PanelLeft,
-  Search,
-  ShoppingCart,
-  Users2,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -23,15 +13,11 @@ import {
 } from "@/components/ui/card"
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
   Table,
   TableBody,
@@ -49,7 +35,6 @@ import {
 import {
   TooltipProvider,
 } from "@/components/ui/tooltip"
-import { SideBar } from "@/components/SideBar"
 
 
 
@@ -78,7 +63,40 @@ function WrappedBadge({ status }: { status: string }) {
   );
 }
 
-function WrappedTableRow({ data }: { data: QueueItem }) {
+
+function MobileCard({ data }: { data: QueueItem }) {
+  return (
+    <div className="bg-white rounded-lg shadow p-4 mb-2">
+      <div className="flex items-center justify-between mb-2">
+        <WrappedBadge status={data.status} />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              aria-haspopup="true"
+              size="icon"
+              variant="ghost"
+            >
+              <MoreHorizontal className="size-4" />
+              <span className="sr-only">Toggle menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div className="mb-2 font-medium">{data.reviewer}</div>
+      <div className="text-sm text-gray-700 mb-2">{data.review}</div>
+      <div className="text-sm text-gray-700">{data.response}</div>
+      <div className="text-sm text-gray-500 mt-2">{data.createdDate}</div>
+    </div>
+  )
+}
+
+
+function DesktopRow({ data }: { data: QueueItem }) {
   return (
     <TableRow>
       <TableCell>
@@ -128,7 +146,34 @@ export interface QueueItem {
   createdDate: string;
 }
 
-function InnerTabContent({ queueItems }: { queueItems: QueueItem[] }) {
+function MobileTable({ queueItems }: { queueItems: QueueItem[] }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Reviews</CardTitle>
+        <CardDescription>
+          Manage your reviews
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+
+        <MobileCard key={-1} data={queueItems[0]} />
+        {queueItems.map((queueItem, index) => (
+          <MobileCard key={index} data={queueItem} />
+        ))}
+      </CardContent>
+      <CardFooter>
+        <div className="text-xs text-muted-foreground">
+          Showing <strong>1-{queueItems.length}</strong> of <strong>{queueItems.length}</strong>{" "}
+          reviews
+        </div>
+      </CardFooter>
+    </Card>
+  )
+}
+
+
+function DesktopTable({ queueItems }: { queueItems: QueueItem[] }) {
   return (
     <Card x-chunk="dashboard-06-chunk-0">
       <CardHeader>
@@ -140,7 +185,6 @@ function InnerTabContent({ queueItems }: { queueItems: QueueItem[] }) {
       <CardContent>
         <Table>
           <TableHeader>
-
             <TableRow>
               <TableHead>Status</TableHead>
               <TableHead>Reviewer</TableHead>
@@ -158,7 +202,7 @@ function InnerTabContent({ queueItems }: { queueItems: QueueItem[] }) {
           </TableHeader>
           <TableBody>
             {queueItems.map((queueItem, index) => (
-              <WrappedTableRow key={index} data={queueItem} />))}
+              <DesktopRow key={index} data={queueItem} />))}
           </TableBody>
         </Table>
       </CardContent>
@@ -170,6 +214,23 @@ function InnerTabContent({ queueItems }: { queueItems: QueueItem[] }) {
       </CardFooter>
     </Card>
   )
+}
+
+
+
+function InnerTabContent({ queueItems }: { queueItems: QueueItem[] }) {
+  return (
+    <div>
+      {/* Display DesktopTable on md and larger screens */}
+      <div className="hidden md:block">
+        <DesktopTable queueItems={queueItems} />
+      </div>
+      {/* Display MobileTable on sm screens */}
+      <div className="block md:hidden">
+        <MobileTable queueItems={queueItems} />
+      </div>
+    </div>
+  );
 }
 
 export default function Dashboard() {
@@ -221,73 +282,8 @@ export default function Dashboard() {
   return (
     <TooltipProvider>
       <div className="flex min-h-screen w-full flex-col bg-muted/40">
-        <SideBar />
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-          <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button size="icon" variant="outline" className="sm:hidden">
-                  <PanelLeft className="size-5" />
-                  <span className="sr-only">Toggle Menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="sm:max-w-xs">
-                <nav className="grid gap-6 text-lg font-medium">
-                  <Link
-                    href="#"
-                    className="group flex size-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                  >
-                    <Package2 className="size-5 transition-all group-hover:scale-110" />
-                    <span className="sr-only">Review Monster</span>
-                  </Link>
-                  <Link
-                    href="#"
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  >
-                    <Home className="size-5" />
-                    Dashboard
-                  </Link>
-                  <Link
-                    href="#"
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  >
-                    <ShoppingCart className="size-5" />
-                    Orders
-                  </Link>
-                  <Link
-                    href="#"
-                    className="flex items-center gap-4 px-2.5 text-foreground"
-                  >
-                    <Package className="size-5" />
-                    Products
-                  </Link>
-                  <Link
-                    href="#"
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  >
-                    <Users2 className="size-5" />
-                    Customers
-                  </Link>
-                  <Link
-                    href="#"
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  >
-                    <LineChart className="size-5" />
-                    Settings
-                  </Link>
-                </nav>
-              </SheetContent>
-            </Sheet>
 
-            <div className="relative ml-auto flex-1 md:grow-0">
-              <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search..."
-                className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-              />
-            </div>
-          </header>
           <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
             <Tabs defaultValue="all">
               <div className="flex items-center">
@@ -299,29 +295,6 @@ export default function Dashboard() {
                     Rejected
                   </TabsTrigger>
                 </TabsList>
-                <div className="ml-auto flex items-center gap-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-7 gap-1">
-                        <ListFilter className="size-3.5" />
-                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                          Filter
-                        </span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuCheckboxItem checked>
-                        Pending
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>Approved</DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>
-                        Rejected
-                      </DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
               </div>
               <TabsContent value="all">
                 <InnerTabContent queueItems={queueItems} />
