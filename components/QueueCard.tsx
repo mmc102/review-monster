@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { CommentThread } from "@/app/protected/dashboard/page";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Textarea } from './ui/textarea';
 import { QueueItem } from '@/types';
+import { CommentThread } from './CommentThread';
 
 interface QueueCardProps {
     queueItem: QueueItem;
