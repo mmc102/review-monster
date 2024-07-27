@@ -1,3 +1,5 @@
+'use client'
+
 import Link from "next/link"
 
 import {
@@ -17,19 +19,24 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 
+import { usePathname } from 'next/navigation'
 
 export function SideBar() {
+
+    const route = usePathname()
+
+    const isActive = (path: string) => {
+        return route === path;
+    }
     return (
         <TooltipProvider>
-
             <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
                 <nav className="flex flex-col items-center gap-4 px-2 py-4">
-
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <Link
                                 href="/protected/dashboard"
-                                className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
+                                className={`flex size-9 items-center justify-center rounded-lg transition-colors md:size-8 ${isActive('/protected/dashboard') ? 'text-foreground' : 'text-muted-foreground'}`}
                             >
                                 <Home className="size-5" />
                                 <span className="sr-only">Dashboard</span>
@@ -41,7 +48,7 @@ export function SideBar() {
                         <TooltipTrigger asChild>
                             <Link
                                 href="/protected/dashboard"
-                                className="flex size-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:size-8"
+                                className={`flex size-9 items-center justify-center rounded-lg transition-colors md:size-8 ${isActive('/protected/dashboard') ? 'text-foreground' : 'text-muted-foreground'}`}
                             >
                                 <Users2 className="size-5" />
                                 <span className="sr-only">Reviews</span>
@@ -53,7 +60,7 @@ export function SideBar() {
                         <TooltipTrigger asChild>
                             <Link
                                 href="/protected/review-queue"
-                                className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
+                                className={`flex size-9 items-center justify-center rounded-lg transition-colors md:size-8 ${isActive('/protected/review-queue') ? 'text-foreground' : 'text-muted-foreground'}`}
                             >
                                 <FileStack className="size-5" />
                                 <span className="sr-only">Review Queue</span>
@@ -65,7 +72,7 @@ export function SideBar() {
                         <TooltipTrigger asChild>
                             <Link
                                 href="/protected/analytics"
-                                className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
+                                className={`flex size-9 items-center justify-center rounded-lg transition-colors md:size-8 ${isActive('/protected/analytics') ? 'text-foreground' : 'text-muted-foreground'}`}
                             >
                                 <LineChart className="size-5" />
                                 <span className="sr-only">Analytics</span>
@@ -79,7 +86,7 @@ export function SideBar() {
                         <TooltipTrigger asChild>
                             <Link
                                 href="/protected/settings"
-                                className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
+                                className={`flex size-9 items-center justify-center rounded-lg transition-colors md:size-8 ${isActive('/protected/settings') ? 'text-foreground' : 'text-muted-foreground'}`}
                             >
                                 <Settings className="size-5" />
                                 <span className="sr-only">Settings</span>
@@ -89,7 +96,6 @@ export function SideBar() {
                     </Tooltip>
                 </nav>
             </aside>
-
         </TooltipProvider>
-    )
+    );
 }

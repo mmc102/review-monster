@@ -85,7 +85,7 @@ export function CommentThread({ data }: { data: QueueItem }) {
 
 function MobileCard({ data }: { data: QueueItem }) {
   return (
-    <div className="mb-2 rounded-lg bg-white p-4 shadow">
+    <Card className="mb-2 rounded-lg bg-white p-4 shadow">
       <div className="mb-2 flex items-center justify-between">
         <WrappedBadge status={data.status} />
         <DropdownMenu>
@@ -109,7 +109,7 @@ function MobileCard({ data }: { data: QueueItem }) {
       <div className="mb-2 font-medium">{data.reviewer}</div>
       <CommentThread data={data} />
       <div className="mt-2 text-sm text-gray-500">{new Date(data.createdDate).toDateString()}</div>
-    </div>
+    </Card>
   );
 }
 
@@ -167,7 +167,7 @@ function MobileTable({ queueItems }: { queueItems: QueueItem[] }) {
           Manage your reviews
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-2">
         {queueItems.length === 0 && <div className="text-center">No reviews found</div>}
 
         {queueItems.map((queueItem, index) => (
@@ -272,7 +272,7 @@ export default function Dashboard() {
       <div className="flex min-h-screen w-full flex-col bg-muted/40">
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
 
-          <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+          <main className="grid flex-1 items-start gap-4  sm:py-0 md:gap-8">
             <Tabs defaultValue="all">
               <div className="flex items-center">
                 <TabsList>

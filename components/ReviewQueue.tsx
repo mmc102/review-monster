@@ -41,7 +41,7 @@ export default function ReviewQueue() {
     const remainingPendingReviews = pendingItems.length;
 
     if (loading) {
-        return <div className="text-center mt-10">Loading...</div>;
+        return <div className="mt-10 text-center">Loading...</div>;
     }
 
     return (
