@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { CommentThread, QueueItem } from "@/app/protected/dashboard/page";
+import { CommentThread } from "@/app/protected/dashboard/page";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Textarea } from './ui/textarea';
+import { QueueItem } from '@/types';
 
 interface QueueCardProps {
     queueItem: QueueItem;
@@ -51,8 +52,8 @@ export default function QueueCard({ queueItem, onStatusChange }: QueueCardProps)
                 ) : (
                     <>
                         <Button onClick={() => setIsEditing(true)}>Edit</Button>
-                        <Button className='bg-green-500' onClick={() => onStatusChange('approved')}>Respond</Button>
-                        <Button className="bg-red-500" onClick={() => onStatusChange('rejected')}>Ignore</Button>
+                        <Button className='bg-green-500 hover:bg-green-800' onClick={() => onStatusChange('approved')}>Respond</Button>
+                        <Button className="bg-red-500 hover:bg-red-800" onClick={() => onStatusChange('rejected')}>Ignore</Button>
 
                     </>
                 )}

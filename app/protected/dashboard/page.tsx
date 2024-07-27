@@ -1,3 +1,4 @@
+"use client"
 import {
   MoreHorizontal,
 } from "lucide-react"
@@ -35,6 +36,9 @@ import {
 import {
   TooltipProvider,
 } from "@/components/ui/tooltip"
+import { QueueItem } from "@/types"
+import { useEffect, useState } from "react"
+import { getReviews } from "@/lib/getters/get_reviews"
 
 
 
@@ -67,10 +71,10 @@ export function CommentThread({ data }: { data: QueueItem }) {
 
   return (
     <>
-      <div className="text-sm text-gray-700 mb-2 bg-gray-100 p-2 rounded-md">
+      <div className="mb-2 rounded-md bg-gray-100 p-2 text-sm text-gray-700">
         {data.review}
       </div>
-      <div className="text-sm text-gray-700 ml-4 pl-4 border-l-2 border-gray-200">
+      <div className="ml-4 border-l-2 border-gray-200 pl-4 text-sm text-gray-700">
         <div className="font-semibold">Response:</div>
         {data.response}
       </div>
@@ -81,8 +85,8 @@ export function CommentThread({ data }: { data: QueueItem }) {
 
 function MobileCard({ data }: { data: QueueItem }) {
   return (
-    <div className="bg-white rounded-lg shadow p-4 mb-2">
-      <div className="flex items-center justify-between mb-2">
+    <div className="mb-2 rounded-lg bg-white p-4 shadow">
+      <div className="mb-2 flex items-center justify-between">
         <WrappedBadge status={data.status} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -104,7 +108,7 @@ function MobileCard({ data }: { data: QueueItem }) {
       </div>
       <div className="mb-2 font-medium">{data.reviewer}</div>
       <CommentThread data={data} />
-      <div className="text-sm text-gray-500 mt-2">{data.createdDate}</div>
+      <div className="mt-2 text-sm text-gray-500">{new Date(data.createdDate).toDateString()}</div>
     </div>
   );
 }
@@ -153,13 +157,6 @@ function DesktopRow({ data }: { data: QueueItem }) {
 
 
 
-export interface QueueItem {
-  reviewer: string;
-  review: string;
-  response: string;
-  status: string;
-  createdDate: string;
-}
 
 function MobileTable({ queueItems }: { queueItems: QueueItem[] }) {
   return (
@@ -171,8 +168,8 @@ function MobileTable({ queueItems }: { queueItems: QueueItem[] }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {queueItems.length === 0 && <div className="text-center">No reviews found</div>}
 
-        <MobileCard key={-1} data={queueItems[0]} />
         {queueItems.map((queueItem, index) => (
           <MobileCard key={index} data={queueItem} />
         ))}
@@ -235,62 +232,38 @@ function DesktopTable({ queueItems }: { queueItems: QueueItem[] }) {
 
 function InnerTabContent({ queueItems }: { queueItems: QueueItem[] }) {
   return (
-    <div>
-      {/* Display DesktopTable on md and larger screens */}
-      <div className="hidden md:block">
-        <DesktopTable queueItems={queueItems} />
-      </div>
-      {/* Display MobileTable on sm screens */}
-      <div className="block md:hidden">
-        <MobileTable queueItems={queueItems} />
-      </div>
-    </div>
-  );
+    <MobileTable queueItems={queueItems} />
+  )
 }
 
 export default function Dashboard() {
 
-  const queueItems: QueueItem[] = [
-    {
-      reviewer: "Alice",
-      review: "The feature is well-implemented, but there's a minor issue with the UI alignment.",
-      response: "Thank you for the feedback, Alice. We'll address the UI alignment issue promptly.",
-      status: "approved",
-      createdDate: "2024-07-20"
-    },
-    {
-      reviewer: "Bob",
-      review: "Great work! The performance improvements are noticeable, but the documentation could be more detailed.",
-      response: "We appreciate your input, Bob. We'll enhance the documentation to provide more clarity.",
-      status: "pending",
-      createdDate: "2024-07-22"
-    },
-    {
-      reviewer: "Charlie",
-      review: "The new design is sleek and user-friendly. However, there's a bug when submitting the form under certain conditions.",
-      response: "Thanks, Charlie. We're glad you like the design. We'll investigate and fix the form submission bug.",
-      status: "rejected",
-      createdDate: "2024-07-19"
-    },
-    {
-      reviewer: "Dana",
-      review: "The recent changes are good, but there are a few typos in the latest release notes.",
-      response: "Apologies for the oversight, Dana. We'll correct the typos in the release notes.",
-      status: "approved",
-      createdDate: "2024-07-21"
-    },
-    {
-      reviewer: "Eli",
-      review: "The API integration is seamless. Could we get some more examples on how to use the new endpoints?",
-      response: "Sure thing, Eli. We'll add more examples to the documentation for the new endpoints.",
-      status: "pending",
-      createdDate: "2024-07-23"
-    }
-  ];
+  const [queueItems, setQueueItems] = useState<QueueItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchQueueItems = async () => {
+      try {
+        const rawQueueItems = await getReviews();
+        setQueueItems(rawQueueItems);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQueueItems();
+  }, []);
+
 
 
   const filterQueue = (queueItems: QueueItem[], status: string) => {
     return queueItems.filter((item) => item.status === status);
+  }
+
+  if (loading) {
+    return <div className="mt-10 text-center">Loading...</div>;
   }
 
 

@@ -12,7 +12,7 @@ interface SupabaseBusinessResponse {
 export async function getBusinessId(supabase: SupabaseClient, user_id: string): Promise<{ business_id: string | null }> {
 
   const { data: businessData, error: businessError } = await supabase
-    .from('user_businesss')
+    .from('business_user')
     .select('business_id')
     .eq('user_id', user_id)
     .single<SupabaseBusinessResponse>();
@@ -34,7 +34,7 @@ export async function getUser(): Promise<WrappedUser> {
     throw authError;
   } else {
     const { data: businessData, error: businessError } = await supabase
-      .from('user_businesss')
+      .from('business_user')
       .select('business_id')
       .eq('user_id', user.id)
       .single<SupabaseBusinessResponse>();
