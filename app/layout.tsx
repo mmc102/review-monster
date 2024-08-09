@@ -9,6 +9,7 @@ import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import Name from "@/components/Name";
+import WithAuth from "@/components/WithAuth";
 
 
 const defaultUrl = process.env.VERCEL_URL
@@ -49,7 +50,9 @@ export default function RootLayout({
           </nav>
           <SideBar />
           <div className="mb-10 w-full grow px-2 sm:px-10">
-            {children}
+            <WithAuth>
+              {children}
+            </WithAuth>
           </div>
           <footer className="flex w-full justify-center border-t border-t-foreground/10 p-8 text-center text-xs">
             <p>Review Monster</p>

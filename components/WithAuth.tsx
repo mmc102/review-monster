@@ -1,4 +1,5 @@
-'use client'
+// components/WithAuth.tsx
+'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -6,39 +7,36 @@ import { createClient } from '@/utils/supabase/client';
 
 const supabase = createClient();
 
-const withAuth = (WrappedComponent: React.ComponentType) => {
-  return function useAuth(props: any) {
-    const [loading, setLoading] = useState(true);
-    const [authenticated, setAuthenticated] = useState(false);
-    const router = useRouter();
+function WithAuth({ children }: { children: React.ReactNode }) {
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+  const router = useRouter();
 
-    useEffect(() => {
-      const checkAuth = async () => {
-        const { data: { user }, error } = await supabase.auth.getUser();
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
 
-        if (user) {
-          setAuthenticated(true);
-        } else {
-          router.push('/login');
-        }
+      if (user) {
+        setAuthenticated(true);
+      } else {
+        router.push('/login');
+      }
 
-        setLoading(false);
-      };
+      setLoading(false);
+    };
 
-      checkAuth();
-    }, [router]);
+    checkAuth();
+  }, [router]);
 
-    if (loading) {
-      return <div>Loading...</div>;
-    }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-    if (!authenticated) {
-      return null;
-    }
+  if (!authenticated) {
+    return null;
+  }
 
-    return <WrappedComponent {...props} />;
-  };
-};
+  return <>{children}</>;
+}
 
-
-export default withAuth;
+export default WithAuth;
