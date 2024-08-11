@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 
 const supabase = createClient();
@@ -11,6 +11,7 @@ function WithAuth({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
   const router = useRouter();
+  const pathname = usePathname()
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -33,8 +34,12 @@ function WithAuth({ children }: { children: React.ReactNode }) {
   }
 
   if (!authenticated) {
+    if (pathname === "/login") {
+      return <>{children}</>
+    }
     return null;
   }
+
 
   return <>{children}</>;
 }
