@@ -33,7 +33,7 @@ function WithAuth({ children }: { children: React.ReactNode }) {
   }, [router]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="mt-10 text-center">Loading...</div>;
   }
 
   if (!authenticated) {
