@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Textarea } from './ui/textarea';
 import { QueueItem } from '@/types';
 import { CommentThread } from './CommentThread';
+import { updateReviewResponse } from '@/lib/setters/set_reviews';
 
 interface QueueCardProps {
     queueItem: QueueItem;
@@ -12,11 +13,10 @@ interface QueueCardProps {
 
 export default function QueueCard({ queueItem, onStatusChange }: QueueCardProps) {
     const [isEditing, setIsEditing] = useState(false);
-    const [editedReview, setEditedReview] = useState(queueItem.review);
     const [editedResponse, setEditedResponse] = useState(queueItem.response);
 
     const handleSave = () => {
-        queueItem.review = editedReview;
+        updateReviewResponse(queueItem.id, editedResponse)
         queueItem.response = editedResponse;
         setIsEditing(false);
     };

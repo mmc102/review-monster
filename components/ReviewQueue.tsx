@@ -26,7 +26,6 @@ export default function ReviewQueue() {
 
     const handleStatusChange = (index: number, newStatus: string) => {
         const item = queueItems[index]
-        console.log(item)
         updateReviewStatus(item.id, newStatus)
         setQueueItems(prevItems => {
             const updatedItems = [...prevItems];
