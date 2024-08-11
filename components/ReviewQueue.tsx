@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import QueueCard from "@/components/QueueCard";
 import { QueueItem } from '@/types';
 import { getReviews } from '@/lib/getters/get_reviews';
+import { updateReviewStatus } from '@/lib/setters/set_reviews';
 
 export default function ReviewQueue() {
     const [queueItems, setQueueItems] = useState<QueueItem[]>([]);
@@ -24,6 +25,9 @@ export default function ReviewQueue() {
     }, []);
 
     const handleStatusChange = (index: number, newStatus: string) => {
+        const item = queueItems[index]
+        console.log(item)
+        updateReviewStatus(item.id, newStatus)
         setQueueItems(prevItems => {
             const updatedItems = [...prevItems];
             updatedItems[index].status = newStatus;

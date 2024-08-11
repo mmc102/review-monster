@@ -38,7 +38,7 @@ export function SideBar() {
                                 href="/protected/dashboard"
                                 className={`flex size-9 items-center justify-center rounded-lg transition-colors md:size-8 ${isActive('/protected/dashboard') ? 'text-foreground' : 'text-muted-foreground'}`}
                             >
-                                <Home className="size-5" />
+                                <Home className="hidden size-5" />
                                 <span className="sr-only">Dashboard</span>
                             </Link>
                         </TooltipTrigger>
@@ -79,20 +79,6 @@ export function SideBar() {
                             </Link>
                         </TooltipTrigger>
                         <TooltipContent side="right">Analytics</TooltipContent>
-                    </Tooltip>
-                </nav>
-                <nav className="mt-auto flex flex-col items-center gap-4 px-2 py-4">
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Link
-                                href="/protected/settings"
-                                className={`flex size-9 items-center justify-center rounded-lg transition-colors md:size-8 ${isActive('/protected/settings') ? 'text-foreground' : 'text-muted-foreground'}`}
-                            >
-                                <Settings className="size-5" />
-                                <span className="sr-only">Settings</span>
-                            </Link>
-                        </TooltipTrigger>
-                        <TooltipContent side="right">Settings</TooltipContent>
                     </Tooltip>
                 </nav>
             </aside>
