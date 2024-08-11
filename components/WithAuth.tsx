@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname, redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 
 const supabase = createClient();
@@ -9,38 +9,37 @@ const supabase = createClient();
 function WithAuth({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
-  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { user }, error } = await supabase.auth.getUser();
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser();
 
-      if (user) {
-        setAuthenticated(true);
-      } else if (pathname !== '/login') {
-        redirect('/login'); // Redirect only if not on login page
+
+        if (user) {
+          setAuthenticated(true);
+        } else {
+          router.push('/login');
+        }
+      } catch (error) {
+        router.push('/login');
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false); // Set loading to false after checking authentication
     };
 
     checkAuth();
-  }, [pathname]); // Add pathname to dependency array
+  }, [router]);
 
   if (loading) {
-    return <div className="ml-6" >Loading...</div>;
+    return <div>Loading...</div>;
   }
 
-  if (authenticated) {
-    return <>{children}</>;
+  if (!authenticated) {
+    return null; // This will prevent rendering while redirecting
   }
 
-  // If not authenticated and not on the login page, redirect
-  if (pathname !== '/login') {
-    redirect('/login');
-  }
-
-  // Render children if on the login page
   return <>{children}</>;
 }
 

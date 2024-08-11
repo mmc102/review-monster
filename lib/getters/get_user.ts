@@ -61,7 +61,6 @@ export async function getOptionalUser(): Promise<WrappedUser | null> {
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 
   if (authError || !user) {
-    console.log('Error fetching user:', authError);
     return null
   } else {
     const { data: businessData, error: businessError } = await supabase
