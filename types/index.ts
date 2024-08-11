@@ -9,6 +9,7 @@ export interface WrappedUser extends User {
 
 
 export interface QueueItem {
+  id: string,
   reviewer: string;
   review: string;
   response: string;

@@ -23,6 +23,7 @@ export async function getReviews(): Promise<QueueItem[]> {
 
     return data.map((item) => (
         {
+            id: item.id,
             reviewer: item.reviewer,
             review: item.review_body,
             response: item.response,

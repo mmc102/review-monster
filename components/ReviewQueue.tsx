@@ -6,7 +6,6 @@ import { getReviews } from '@/lib/getters/get_reviews';
 
 export default function ReviewQueue() {
     const [queueItems, setQueueItems] = useState<QueueItem[]>([]);
-    const [currentPendingIndex, setCurrentPendingIndex] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -23,11 +22,6 @@ export default function ReviewQueue() {
 
         fetchQueueItems();
     }, []);
-
-    useEffect(() => {
-        const nextPendingIndex = queueItems.findIndex(item => item.status === "pending");
-        setCurrentPendingIndex(nextPendingIndex !== -1 ? nextPendingIndex : null);
-    }, [queueItems]);
 
     const handleStatusChange = (index: number, newStatus: string) => {
         setQueueItems(prevItems => {
@@ -51,25 +45,12 @@ export default function ReviewQueue() {
                     <h2 className="text-lg font-semibold">Pending Reviews: {remainingPendingReviews}</h2>
                 </div>
                 {remainingPendingReviews > 0 ? (
-                    <div className="relative" style={{ height: `${remainingPendingReviews * 10 + 200}px` }}>
-                        {pendingItems.map((item, index) => (
-                            <div
-                                key={index}
-                                className="absolute w-full transition-transform"
-                                style={{
-                                    zIndex: remainingPendingReviews - index,
-                                    transform: `translateY(${index * 10}px) scale(${1 - index * 0.02})`,
-                                }}
-                            >
-                                <QueueCard
-                                    queueItem={item}
-                                    onStatusChange={(newStatus) =>
-                                        handleStatusChange(currentPendingIndex!, newStatus)
-                                    }
-                                />
-                            </div>
-                        ))}
-                    </div>
+                    <QueueCard
+                        queueItem={pendingItems[0]}
+                        onStatusChange={(newStatus) =>
+                            handleStatusChange(queueItems.findIndex(q => q.id === pendingItems[0].id), newStatus)
+                        }
+                    />
                 ) : (
                     <div className="text-center text-lg font-semibold text-gray-500">
                         No more pending reviews!
