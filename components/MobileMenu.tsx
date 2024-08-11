@@ -6,10 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 import {
     FileStack,
-    PanelLeft,
-    Home,
     LineChart,
-    Settings,
     Users2,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
@@ -54,16 +51,6 @@ export default function MobileMenu() {
                         Analytics
                     </Link>
 
-                </SheetTrigger>
-
-                <SheetTrigger asChild>
-                    <Link
-                        href="/protected/settings"
-                        className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                    >
-                        <Settings className="size-5" />
-                        Settings
-                    </Link>
                 </SheetTrigger>
             </nav>
         </SheetContent>

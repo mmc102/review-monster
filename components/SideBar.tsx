@@ -8,7 +8,6 @@ import {
     FileStack,
     Home,
     LineChart,
-    Settings,
     Users2,
 } from "lucide-react"
 
