@@ -9,3 +9,5 @@ update the prompt from the db
 all creation of businesses w. onboarding flow
 
 ## fixes
+
+make sure auth flow works
