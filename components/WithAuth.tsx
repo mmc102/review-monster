@@ -37,7 +37,8 @@ function WithAuth({ children }: { children: React.ReactNode }) {
     if (pathname === "/login") {
       return <>{children}</>
     }
-    return null;
+
+    router.push('/login');
   }
 
 
