@@ -35,7 +35,13 @@ export async function getUser(): Promise<WrappedUser> {
   } else {
     const { data: businessData, error: businessError } = await supabase
       .from('business_user')
-      .select(`id, business_id (id , name)`)
+      .select(`
+        id,
+        business_id (
+          id,
+          name
+        )
+      `)
       .eq('user_id', user.id)
       .single();
 
