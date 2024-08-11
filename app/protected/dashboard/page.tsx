@@ -40,6 +40,7 @@ import { QueueItem } from "@/types"
 import { useEffect, useState } from "react"
 import { getReviews } from "@/lib/getters/get_reviews"
 import { CommentThread } from "@/components/CommentThread"
+import { useRouter } from "next/navigation"
 
 
 
@@ -144,12 +145,13 @@ function DesktopRow({ data }: { data: QueueItem }) {
 
 
 function MobileTable({ queueItems }: { queueItems: QueueItem[] }) {
+  const router = useRouter()
   return (
     <Card>
       <CardHeader>
         <CardTitle>Reviews</CardTitle>
         <CardDescription>
-          Manage your reviews
+          <Button variant={"secondary"} onClick={() => { router.push("/protected/review-queue") }}>Respond to reviews</Button>
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
@@ -169,49 +171,6 @@ function MobileTable({ queueItems }: { queueItems: QueueItem[] }) {
   )
 }
 
-
-function DesktopTable({ queueItems }: { queueItems: QueueItem[] }) {
-  return (
-    <Card x-chunk="dashboard-06-chunk-0">
-      <CardHeader>
-        <CardTitle>Reviews</CardTitle>
-        <CardDescription>
-          Manage your reviews
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Status</TableHead>
-              <TableHead>Reviewer</TableHead>
-              <TableHead>Review</TableHead>
-              <TableHead>
-                Response
-              </TableHead>
-              <TableHead>
-                Created
-              </TableHead>
-              <TableHead>
-                <span className="sr-only">Actions</span>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {queueItems.map((queueItem, index) => (
-              <DesktopRow key={index} data={queueItem} />))}
-          </TableBody>
-        </Table>
-      </CardContent>
-      <CardFooter>
-        <div className="text-xs text-muted-foreground">
-          Showing <strong>1-{queueItems.length}</strong> of <strong>{queueItems.length}</strong>{" "}
-          reviews
-        </div>
-      </CardFooter>
-    </Card>
-  )
-}
 
 
 

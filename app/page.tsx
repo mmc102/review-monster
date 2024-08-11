@@ -16,7 +16,7 @@ export default async function Index() {
     return redirect("/login");
   }
   else {
-    return redirect("/protected/dashboard");
+    return redirect("/protected/review-queue");
   }
 
 }

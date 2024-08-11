@@ -4,6 +4,9 @@ import QueueCard from "@/components/QueueCard";
 import { QueueItem } from '@/types';
 import { getReviews } from '@/lib/getters/get_reviews';
 import { updateReviewStatus } from '@/lib/setters/set_reviews';
+import Link from 'next/link';
+import { Button } from './ui/button';
+import { useRouter } from 'next/navigation';
 
 export default function ReviewQueue() {
     const [queueItems, setQueueItems] = useState<QueueItem[]>([]);
@@ -36,6 +39,7 @@ export default function ReviewQueue() {
 
     const pendingItems = queueItems.filter(item => item.status === "pending");
     const remainingPendingReviews = pendingItems.length;
+    const router = useRouter()
 
     if (loading) {
         return <div className="mt-10 text-center">Loading...</div>;
@@ -55,9 +59,11 @@ export default function ReviewQueue() {
                         }
                     />
                 ) : (
-                    <div className="text-center text-lg font-semibold text-gray-500">
-                        No more pending reviews!
-                    </div>
+                    <>
+                        <div className="text-center text-lg font-semibold text-gray-500">
+                            <Button variant="secondary" onClick={() => { router.push("/protected/dashboard") }}>Back to dashboard</Button>
+                        </div>
+                    </>
                 )}
             </div>
         </div>
